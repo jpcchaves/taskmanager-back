@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.taskmanager.rest.webservice</groupId>
-	<artifactId>rest-web-service</artifactId>
+	<artifactId>taskmanager</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>rest-web-service</name>
+	<name>taskmanager</name>
 	<description>This is a simples Task Manager with authentication</description>
 	<properties>
 		<java.version>17</java.version>

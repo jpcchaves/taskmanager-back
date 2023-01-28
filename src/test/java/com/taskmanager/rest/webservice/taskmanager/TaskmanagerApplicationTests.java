@@ -1,10 +1,10 @@
-package com.taskmanager.rest.webservice.restwebservice;
+package com.taskmanager.rest.webservice.taskmanager;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class RestWebServiceApplicationTests {
+class TaskmanagerApplicationTests {
 
 	@Test
 	void contextLoads() {

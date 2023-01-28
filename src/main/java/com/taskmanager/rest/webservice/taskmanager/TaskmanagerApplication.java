@@ -1,13 +1,13 @@
-package com.taskmanager.rest.webservice.restwebservice;
+package com.taskmanager.rest.webservice.taskmanager;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class RestWebServiceApplication {
+public class TaskmanagerApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(RestWebServiceApplication.class, args);
+		SpringApplication.run(TaskmanagerApplication.class, args);
 	}
 
 }
