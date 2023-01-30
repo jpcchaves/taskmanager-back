@@ -1,6 +1,7 @@
 package com.ws.taskmanager.services;
 
 import com.ws.taskmanager.data.DTO.TaskDTO;
+import com.ws.taskmanager.mapper.ModelMapperService;
 import com.ws.taskmanager.models.TaskModel;
 import com.ws.taskmanager.repositories.TaskRepository;
 import jakarta.transaction.Transactional;
@@ -20,14 +21,15 @@ public class TaskService {
   }
 
   @Transactional
-  public TaskModel createTask(TaskDTO taskDTO) {
-    var task = new TaskModel();
-    task.setCreatedAt(LocalDateTime.now(ZoneId.of("UTC")));
+  public TaskDTO createTask(TaskDTO taskDTO) {
 
-    ModelMapper modelMapper = new ModelMapper();
-    modelMapper.map(taskDTO, task);
+    taskDTO.setCreatedAt(LocalDateTime.now(ZoneId.of("UTC")));
 
-    return taskRepository.save(task);
+    var entity = ModelMapperService.parseObject(taskDTO, TaskModel.class);
+
+    var dto = ModelMapperService.parseObject(taskRepository.save(entity), TaskDTO.class);
+
+    return dto;
   }
 
 }

@@ -1,6 +1,5 @@
 package com.ws.taskmanager.data.DTO;
 
-import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -16,6 +15,15 @@ public class TaskDTO {
 
   @NotNull
   private Boolean concluded;
+  private LocalDateTime createdAt;
+
+  public LocalDateTime getCreatedAt() {
+    return createdAt;
+  }
+
+  public void setCreatedAt(LocalDateTime createdAt) {
+    this.createdAt = createdAt;
+  }
 
   public String getTask() {
     return task;
