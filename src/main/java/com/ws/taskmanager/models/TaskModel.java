@@ -8,9 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.UUID;
-import org.springframework.lang.NonNull;
 
 @Entity
 @Table(name = "_task")
@@ -28,16 +26,6 @@ public class TaskModel implements Serializable {
 
   @Column(name = "is_concluded", nullable = false)
   private Boolean isConcluded;
-
-  public TaskModel() {
-  }
-
-  public TaskModel(UUID id, String task, LocalDateTime deadline, Boolean isConcluded) {
-    this.id = id;
-    this.task = task;
-    this.deadline = deadline;
-    this.isConcluded = isConcluded;
-  }
 
   public UUID getId() {
     return id;
