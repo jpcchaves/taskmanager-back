@@ -15,17 +15,17 @@ import java.util.UUID;
 public class TaskModel implements Serializable {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.UUID)
+  @GeneratedValue(strategy = GenerationType.AUTO)
   private UUID id;
 
-  @Column(name = "task", nullable = false)
+  @Column(nullable = false)
   private String task;
 
-  @Column(name = "deadline", nullable = false)
+  @Column(nullable = false)
   private LocalDateTime deadline;
 
-  @Column(name = "is_concluded", nullable = false)
-  private Boolean isConcluded;
+  @Column(nullable = false)
+  private Boolean concluded;
 
   public UUID getId() {
     return id;
@@ -52,10 +52,10 @@ public class TaskModel implements Serializable {
   }
 
   public Boolean getConcluded() {
-    return isConcluded;
+    return concluded;
   }
 
   public void setConcluded(Boolean concluded) {
-    isConcluded = concluded;
+    this.concluded = concluded;
   }
 }
