@@ -30,12 +30,7 @@ public class TaskController {
   @PostMapping("/new")
   public ResponseEntity<Object> createTask(@RequestBody @Valid TaskDTO taskDTO) {
 
-    var task = new TaskModel();
-    BeanUtils.copyProperties(taskDTO, task);
-
-    task.setCreatedAt(LocalDateTime.now(ZoneId.of("UTC")));
-
-    return ResponseEntity.status(HttpStatus.CREATED).body(taskService.createTask(task));
+    return ResponseEntity.status(HttpStatus.CREATED).body(taskService.createTask(taskDTO));
 
   }
 

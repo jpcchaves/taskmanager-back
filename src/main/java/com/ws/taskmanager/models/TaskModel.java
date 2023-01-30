@@ -69,5 +69,16 @@ public class TaskModel implements Serializable {
   public void setCreatedAt(LocalDateTime createdAt) {
     this.createdAt = createdAt;
   }
+
+  @Override
+  public String toString() {
+    return "TaskModel{" +
+            "id=" + id +
+            ", task='" + task + '\'' +
+            ", deadline=" + deadline +
+            ", concluded=" + concluded +
+            ", createdAt=" + createdAt +
+            '}';
+  }
 }
 

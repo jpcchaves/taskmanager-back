@@ -40,4 +40,13 @@ public class TaskDTO {
   public void setConcluded(Boolean concluded) {
     this.concluded = concluded;
   }
+
+  @Override
+  public String toString() {
+    return "TaskDTO{" +
+            "task='" + task + '\'' +
+            ", deadline=" + deadline +
+            ", concluded=" + concluded +
+            '}';
+  }
 }
