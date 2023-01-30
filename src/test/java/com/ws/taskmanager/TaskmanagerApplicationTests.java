@@ -1,4 +1,4 @@
-package com.taskmanager.rest.webservice.taskmanager;
+package com.ws.taskmanager;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
