@@ -28,8 +28,8 @@ public class TaskController {
   }
 
   @PostMapping("/new")
-  public TaskDTO createTask(@RequestBody @Valid TaskDTO taskDTO) {
-    return taskService.createTask(taskDTO);
+  public ResponseEntity<TaskDTO> createTask(@RequestBody @Valid TaskDTO taskDTO) {
+    return ResponseEntity.status(HttpStatus.CREATED).body(taskService.createTask(taskDTO));
   }
 
 
