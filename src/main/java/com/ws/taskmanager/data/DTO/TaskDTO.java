@@ -1,6 +1,9 @@
 package com.ws.taskmanager.data.DTO;
 
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 public class TaskDTO {
@@ -8,8 +11,10 @@ public class TaskDTO {
   @NotBlank
   private String task;
 
+  @FutureOrPresent
   private LocalDateTime deadline;
 
+  @NotNull
   private Boolean concluded;
 
   public String getTask() {

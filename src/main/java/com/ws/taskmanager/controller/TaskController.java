@@ -5,6 +5,8 @@ import com.ws.taskmanager.data.DTO.TaskDTO;
 import com.ws.taskmanager.models.TaskModel;
 import com.ws.taskmanager.services.TaskService;
 import jakarta.validation.Valid;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,8 +31,9 @@ public class TaskController {
   public ResponseEntity<Object> createTask(@RequestBody @Valid TaskDTO taskDTO) {
 
     var task = new TaskModel();
-
     BeanUtils.copyProperties(taskDTO, task);
+
+    task.setCreatedAt(LocalDateTime.now(ZoneId.of("UTC")));
 
     return ResponseEntity.status(HttpStatus.CREATED).body(taskService.createTask(task));
 

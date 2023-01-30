@@ -27,6 +27,9 @@ public class TaskModel implements Serializable {
   @Column(nullable = false)
   private Boolean concluded;
 
+  @Column(name = "created_at")
+  private LocalDateTime createdAt;
+
   public UUID getId() {
     return id;
   }
@@ -58,4 +61,13 @@ public class TaskModel implements Serializable {
   public void setConcluded(Boolean concluded) {
     this.concluded = concluded;
   }
+
+  public LocalDateTime getCreatedAt() {
+    return createdAt;
+  }
+
+  public void setCreatedAt(LocalDateTime createdAt) {
+    this.createdAt = createdAt;
+  }
 }
+
