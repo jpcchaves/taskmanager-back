@@ -4,6 +4,7 @@ package com.ws.taskmanager.controller;
 import com.ws.taskmanager.data.DTO.TaskDTO;
 import com.ws.taskmanager.services.TaskService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -28,8 +29,8 @@ public class TaskController {
     }
 
     @Operation(summary = "Creates a new task",
-            description = "Adds a new task by passing in a JSON, XML or YML representation of the task!",
-            tags = {"Task"},
+            description = "Adds a new task by passing in a JSON representation of the task!",
+            tags = {"Tasks"},
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200",
                             content = @Content(schema = @Schema(implementation = TaskDTO.class))
@@ -45,21 +46,74 @@ public class TaskController {
     }
 
     @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Finds all tasks", description = "Finds all tasks",
+            tags = {"Tasks"},
+            responses = {
+                    @ApiResponse(description = "Success", responseCode = "200",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            array = @ArraySchema(schema = @Schema(implementation = TaskDTO.class))
+                                    )
+                            }),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+                    @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
+            }
+    )
     public ResponseEntity<List<TaskDTO>> listAllTasks() {
         return ResponseEntity.status(HttpStatus.OK).body(taskService.listAllTasks());
     }
 
     @GetMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Finds a tasks", description = "Finds a tasks",
+            tags = {"Tasks"},
+            responses = {
+                    @ApiResponse(description = "Success", responseCode = "200",
+                            content = @Content(schema = @Schema(implementation = TaskDTO.class))
+                    ),
+                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+                    @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
+            }
+    )
     public ResponseEntity<TaskDTO> listTaskById(@PathVariable(value = "id") UUID id) throws Exception {
         return ResponseEntity.status(HttpStatus.OK).body(taskService.listTaskById(id));
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Updates a task",
+            description = "Updates a task by passing in a JSON representation of the task!",
+            tags = {"Tasks"},
+            responses = {
+                    @ApiResponse(description = "Updated", responseCode = "200",
+                            content = @Content(schema = @Schema(implementation = TaskDTO.class))
+                    ),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+                    @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
+            }
+    )
     public ResponseEntity<TaskDTO> updateTask(@PathVariable(value = "id") UUID id, @RequestBody TaskDTO taskDTO) {
         return ResponseEntity.status(HttpStatus.OK).body(taskService.updateTask(id, taskDTO));
     }
 
-    @DeleteMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/{id}")
+    @Operation(summary = "Deletes a task",
+            description = "Deletes a task by passing in a JSON representation of the task!",
+            tags = {"Tasks"},
+            responses = {
+                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+                    @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
+            }
+    )
     public ResponseEntity<?> deleteTask(@PathVariable(value = "id") UUID id) throws Exception {
         taskService.deleteTask(id);
         return ResponseEntity.noContent().build();
