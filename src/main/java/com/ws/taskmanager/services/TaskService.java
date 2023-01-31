@@ -50,11 +50,11 @@ public class TaskService {
 
     }
 
-
+    @Transactional
     public TaskDTO updateTask(UUID id, TaskDTO taskDTO) {
 
         var task = taskRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não foi encontrado uma task com o ID informado!"));
-        
+
         task.setTask(taskDTO.getTask());
         task.setConcluded(taskDTO.getConcluded());
         task.setDeadline(taskDTO.getDeadline());
@@ -63,4 +63,11 @@ public class TaskService {
 
         return dto;
     }
+
+    public void deleteTask(UUID id) {
+        var task = taskRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não é possível deletar essa task pois ela não existe!"));
+        taskRepository.deleteById(id);
+    }
+
+
 }

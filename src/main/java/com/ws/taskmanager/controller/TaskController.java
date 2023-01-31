@@ -32,14 +32,20 @@ public class TaskController {
         return ResponseEntity.status(HttpStatus.OK).body(taskService.listAllTasks());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<TaskDTO> listTaskById(@PathVariable UUID id) throws Exception {
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<TaskDTO> listTaskById(@PathVariable(value = "id") UUID id) throws Exception {
         return ResponseEntity.status(HttpStatus.OK).body(taskService.listTaskById(id));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<TaskDTO> updateTask(@PathVariable UUID id, @RequestBody TaskDTO taskDTO) {
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<TaskDTO> updateTask(@PathVariable(value = "id") UUID id, @RequestBody TaskDTO taskDTO) {
         return ResponseEntity.status(HttpStatus.OK).body(taskService.updateTask(id, taskDTO));
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<?> deleteTask(@PathVariable(value = "id") UUID id) throws Exception {
+        taskService.deleteTask(id);
+        return ResponseEntity.noContent().build();
     }
 
 
