@@ -1,6 +1,7 @@
 package com.ws.taskmanager.services;
 
 import com.ws.taskmanager.data.DTO.TaskDTO;
+import com.ws.taskmanager.exceptions.ResourceNotFoundException;
 import com.ws.taskmanager.mapper.ModelMapperService;
 import com.ws.taskmanager.models.TaskModel;
 import com.ws.taskmanager.repositories.TaskRepository;
@@ -43,7 +44,7 @@ public class TaskService {
 
     public TaskDTO listTaskById(UUID id) throws Exception {
 
-        var task = taskRepository.findById(id).orElseThrow(() -> new RuntimeException("not found!"));
+        var task = taskRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não foi encontrado uma task com o ID informado!"));
 
         return ModelMapperService.parseObject(task, TaskDTO.class);
 

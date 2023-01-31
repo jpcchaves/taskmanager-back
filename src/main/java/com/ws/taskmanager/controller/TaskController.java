@@ -33,7 +33,7 @@ public class TaskController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TaskDTO> listTaskById(@PathVariable UUID id) {
+    public ResponseEntity<TaskDTO> listTaskById(@PathVariable UUID id) throws Exception {
         return ResponseEntity.status(HttpStatus.OK).body(taskService.listTaskById(id));
     }
 
