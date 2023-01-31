@@ -51,4 +51,16 @@ public class TaskService {
     }
 
 
+    public TaskDTO updateTask(UUID id, TaskDTO taskDTO) {
+
+        var task = taskRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não foi encontrado uma task com o ID informado!"));
+        
+        task.setTask(taskDTO.getTask());
+        task.setConcluded(taskDTO.getConcluded());
+        task.setDeadline(taskDTO.getDeadline());
+
+        var dto = ModelMapperService.parseObject(taskRepository.save(task), TaskDTO.class);
+
+        return dto;
+    }
 }
