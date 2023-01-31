@@ -3,9 +3,11 @@ package com.ws.taskmanager.data.DTO;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class TaskDTO {
+public class TaskDTO implements Serializable {
 
   @NotBlank
   private String task;

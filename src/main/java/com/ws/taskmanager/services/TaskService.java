@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
 
 @Service
 public class TaskService {
@@ -32,4 +33,11 @@ public class TaskService {
     return dto;
   }
 
+    public List<TaskDTO> listAllTasks() {
+
+    var tasks = ModelMapperService.parseListObjects(taskRepository.findAll(), TaskDTO.class);
+    
+    return tasks;
+
+    }
 }
