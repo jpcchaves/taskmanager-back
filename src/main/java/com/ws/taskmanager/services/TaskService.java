@@ -42,7 +42,7 @@ public class TaskService {
 
     }
 
-    public TaskDTO listTaskById(UUID id) throws Exception {
+    public TaskDTO listTaskById(UUID id) {
 
         var task = taskRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não foi encontrado uma task com o ID informado!"));
 
