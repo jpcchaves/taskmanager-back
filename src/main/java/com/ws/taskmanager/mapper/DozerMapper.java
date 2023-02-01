@@ -1,13 +1,14 @@
 package com.ws.taskmanager.mapper;
 
-import org.modelmapper.ModelMapper;
+import com.github.dozermapper.core.DozerBeanMapperBuilder;
 
+import com.github.dozermapper.core.Mapper;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ModelMapperService {
+public class DozerMapper {
 
-    private static ModelMapper mapper = new ModelMapper();
+    private static final Mapper mapper = DozerBeanMapperBuilder.buildDefault();
 
     public static <O, D> D parseObject(O origin, Class<D> destination) {
         return mapper.map(origin, destination);

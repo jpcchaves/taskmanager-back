@@ -45,7 +45,7 @@ public class TaskController {
         return ResponseEntity.status(HttpStatus.CREATED).body(taskService.createTask(taskDTO));
     }
 
-    @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Finds all tasks", description = "Finds all tasks",
             tags = {"Tasks"},
             responses = {
@@ -66,7 +66,7 @@ public class TaskController {
         return ResponseEntity.status(HttpStatus.OK).body(taskService.listAllTasks());
     }
 
-    @GetMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Finds a tasks", description = "Finds a tasks",
             tags = {"Tasks"},
             responses = {

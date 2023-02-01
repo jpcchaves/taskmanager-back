@@ -2,7 +2,7 @@ package com.ws.taskmanager.services;
 
 import com.ws.taskmanager.data.DTO.TaskDTO;
 import com.ws.taskmanager.exceptions.ResourceNotFoundException;
-import com.ws.taskmanager.mapper.ModelMapperService;
+import com.ws.taskmanager.mapper.DozerMapper;
 import com.ws.taskmanager.models.TaskModel;
 import com.ws.taskmanager.repositories.TaskRepository;
 import jakarta.transaction.Transactional;
@@ -27,16 +27,16 @@ public class TaskService {
 
         taskDTO.setCreatedAt(LocalDateTime.now(ZoneId.of("UTC")));
 
-        var entity = ModelMapperService.parseObject(taskDTO, TaskModel.class);
+        var entity = DozerMapper.parseObject(taskDTO, TaskModel.class);
 
-        var dto = ModelMapperService.parseObject(taskRepository.save(entity), TaskDTO.class);
+        var dto = DozerMapper.parseObject(taskRepository.save(entity), TaskDTO.class);
 
         return dto;
     }
 
     public List<TaskDTO> listAllTasks() {
 
-        var tasks = ModelMapperService.parseListObjects(taskRepository.findAll(), TaskDTO.class);
+        var tasks = DozerMapper.parseListObjects(taskRepository.findAll(), TaskDTO.class);
 
         return tasks;
 
@@ -46,7 +46,7 @@ public class TaskService {
 
         var task = taskRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não foi encontrado uma task com o ID informado!"));
 
-        return ModelMapperService.parseObject(task, TaskDTO.class);
+        return DozerMapper.parseObject(task, TaskDTO.class);
 
     }
 
@@ -59,7 +59,7 @@ public class TaskService {
         task.setConcluded(taskDTO.getConcluded());
         task.setDeadline(taskDTO.getDeadline());
 
-        var dto = ModelMapperService.parseObject(taskRepository.save(task), TaskDTO.class);
+        var dto = DozerMapper.parseObject(taskRepository.save(task), TaskDTO.class);
 
         return dto;
     }
