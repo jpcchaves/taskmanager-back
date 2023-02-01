@@ -1,5 +1,8 @@
 package com.ws.taskmanager.data.DTO;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.github.dozermapper.core.Mapping;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
@@ -8,25 +11,32 @@ import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
+import org.springframework.hateoas.RepresentationModel;
 
-public class TaskDTO implements Serializable {
+@JsonPropertyOrder({"id", "task", "concluded", "deadline", "createdAt"})
+public class TaskDTO extends RepresentationModel<TaskDTO> implements Serializable {
 
-    @Id
-    private UUID id;
+    @Mapping("id")
+    @JsonProperty("id")
+    private UUID key;
+
     @NotBlank
     private String task;
+
     @FutureOrPresent
     private LocalDateTime deadline;
+
     @NotNull
     private Boolean concluded;
+
     private LocalDateTime createdAt;
 
-    public UUID getId() {
-        return id;
+    public UUID getKey() {
+        return key;
     }
 
-    public void setId(UUID id) {
-        this.id = id;
+    public void setKey(UUID key) {
+        this.key = key;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -62,11 +72,42 @@ public class TaskDTO implements Serializable {
     }
 
     @Override
-    public String toString() {
-        return "TaskDTO{" +
-                "task='" + task + '\'' +
-                ", deadline=" + deadline +
-                ", concluded=" + concluded +
-                '}';
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
+
+        TaskDTO taskDTO = (TaskDTO) o;
+
+        if (!getKey().equals(taskDTO.getKey())) {
+            return false;
+        }
+        if (!getTask().equals(taskDTO.getTask())) {
+            return false;
+        }
+        if (!getDeadline().equals(taskDTO.getDeadline())) {
+            return false;
+        }
+        if (!getConcluded().equals(taskDTO.getConcluded())) {
+            return false;
+        }
+        return getCreatedAt().equals(taskDTO.getCreatedAt());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + getKey().hashCode();
+        result = 31 * result + getTask().hashCode();
+        result = 31 * result + getDeadline().hashCode();
+        result = 31 * result + getConcluded().hashCode();
+        result = 31 * result + getCreatedAt().hashCode();
+        return result;
     }
 }

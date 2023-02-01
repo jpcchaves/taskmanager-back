@@ -41,9 +41,11 @@ public class TaskController {
             }
     )
     @PostMapping(value = "/new", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<TaskDTO> createTask(@RequestBody @Valid TaskDTO taskDTO) {
+    public ResponseEntity<TaskDTO> createTask(@RequestBody @Valid TaskDTO taskDTO)
+        throws Exception {
         return ResponseEntity.status(HttpStatus.CREATED).body(taskService.createTask(taskDTO));
     }
+
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Finds all tasks", description = "Finds all tasks",
@@ -98,7 +100,8 @@ public class TaskController {
                     @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
             }
     )
-    public ResponseEntity<TaskDTO> updateTask(@PathVariable(value = "id") UUID id, @RequestBody TaskDTO taskDTO) {
+    public ResponseEntity<TaskDTO> updateTask(@PathVariable(value = "id") UUID id, @RequestBody TaskDTO taskDTO)
+        throws Exception {
         return ResponseEntity.status(HttpStatus.OK).body(taskService.updateTask(id, taskDTO));
     }
 
