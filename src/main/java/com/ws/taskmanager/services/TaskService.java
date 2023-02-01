@@ -73,16 +73,17 @@ public class TaskService {
     }
 
     @Transactional
-    public TaskDTO updateTask(UUID id, TaskDTO taskDTO) throws Exception {
+    public TaskResponseDTO updateTask(UUID id, TaskDTO taskDTO) throws Exception {
 
-        var task = taskRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não foi encontrado uma task com o ID informado!"));
+        var entity = taskRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não foi encontrado uma task com o ID informado!"));
 
-        task.setTask(taskDTO.getTask());
-        task.setConcluded(taskDTO.getConcluded());
-        task.setDeadline(taskDTO.getDeadline());
+        entity.setTask(taskDTO.getTask());
+        entity.setConcluded(taskDTO.getConcluded());
+        entity.setDeadline(taskDTO.getDeadline());
 
-        var dto = DozerMapper.parseObject(taskRepository.save(task), TaskDTO.class);
+        var task = DozerMapper.parseObject(taskRepository.save(entity), TaskModel.class);
 
+        var dto = DozerMapper.parseObject(task, TaskResponseDTO.class);
         dto.add(linkTo(methodOn(TaskController.class).listTaskById(dto.getKey())).withSelfRel());
 
         return dto;
