@@ -13,5 +13,8 @@ spring:
         format_sql: true
     database: MYSQL
     database-platform: org.hibernate.dialect.MySQL8Dialect
-
+spring-doc:
+  swagger-ui:
+    operations-sorter: alpha
+    tags-sorter: alpha
 

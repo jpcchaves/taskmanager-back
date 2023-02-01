@@ -1,9 +1,11 @@
 package com.ws.taskmanager.configs.swagger;
 
 import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
+import org.springdoc.core.properties.SwaggerUiConfigProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -20,6 +22,5 @@ public class OpenApiConfig {
                         .termsOfService("https://porfolio-jpcchaves.vercel.app/")
                         .license(new License().name("MIT").url("https://porfolio-jpcchaves.vercel.app/")));
     }
-
 }
 
