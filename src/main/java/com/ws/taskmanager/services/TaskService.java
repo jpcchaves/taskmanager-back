@@ -39,9 +39,10 @@ public class TaskService {
         return dto;
     }
 
-    public List<TaskDTO> listAllTasks() {
+    public List<TaskResponseDTO> listAllTasks() {
 
-        var tasks = DozerMapper.parseListObjects(taskRepository.findAll(), TaskDTO.class);
+        var entities = DozerMapper.parseListObjects(taskRepository.findAll(), TaskModel.class);
+        var tasks = DozerMapper.parseListObjects(entities, TaskResponseDTO.class);
 
         tasks
             .forEach((task) -> {

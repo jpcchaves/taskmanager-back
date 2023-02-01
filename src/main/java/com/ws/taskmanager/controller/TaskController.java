@@ -65,7 +65,7 @@ public class TaskController {
                     @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
             }
     )
-    public ResponseEntity<List<TaskDTO>> listAllTasks() {
+    public ResponseEntity<List<TaskResponseDTO>> listAllTasks() {
         return ResponseEntity.status(HttpStatus.OK).body(taskService.listAllTasks());
     }
 
