@@ -83,7 +83,7 @@ public class TaskController {
                     @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
             }
     )
-    public ResponseEntity<TaskDTO> listTaskById(@PathVariable(value = "id") UUID id) throws Exception {
+    public ResponseEntity<TaskResponseDTO> listTaskById(@PathVariable(value = "id") UUID id) throws Exception {
         return ResponseEntity.status(HttpStatus.OK).body(taskService.listTaskById(id));
     }
 

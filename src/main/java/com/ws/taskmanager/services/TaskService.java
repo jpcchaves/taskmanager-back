@@ -8,6 +8,7 @@ import com.ws.taskmanager.mapper.DozerMapper;
 import com.ws.taskmanager.models.TaskModel;
 import com.ws.taskmanager.repositories.TaskRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.scheduling.config.Task;
 import org.springframework.stereotype.Service;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -57,15 +58,18 @@ public class TaskService {
 
     }
 
-    public TaskDTO listTaskById(UUID id) throws Exception {
+    public TaskResponseDTO listTaskById(UUID id) throws Exception {
 
         var entity = taskRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não foi encontrado uma task com o ID informado!"));
 
-        TaskDTO taskDTO = DozerMapper.parseObject(entity, TaskDTO.class);
+        var task = DozerMapper.parseObject(entity, TaskModel.class);
 
-        taskDTO.add(linkTo(methodOn(TaskController.class).listTaskById(id)).withSelfRel());
+        var dto = DozerMapper.parseObject(task, TaskResponseDTO.class);
 
-        return taskDTO;
+
+        dto.add(linkTo(methodOn(TaskController.class).listTaskById(id)).withSelfRel());
+
+        return dto;
     }
 
     @Transactional
