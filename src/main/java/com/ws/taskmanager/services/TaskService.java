@@ -2,6 +2,7 @@ package com.ws.taskmanager.services;
 
 import com.ws.taskmanager.controller.TaskController;
 import com.ws.taskmanager.data.DTO.TaskDTO;
+import com.ws.taskmanager.data.DTO.TaskResponseDTO;
 import com.ws.taskmanager.exceptions.ResourceNotFoundException;
 import com.ws.taskmanager.mapper.DozerMapper;
 import com.ws.taskmanager.models.TaskModel;
@@ -27,14 +28,12 @@ public class TaskService {
     }
 
     @Transactional
-    public TaskDTO createTask(TaskDTO taskDTO) throws Exception {
+    public TaskResponseDTO createTask(TaskDTO taskDTO) throws Exception {
 
-        taskDTO.setCreatedAt(LocalDateTime.now(ZoneId.of("UTC")));
+        var task = DozerMapper.parseObject(taskDTO, TaskModel.class);
+        task.setCreatedAt(LocalDateTime.now(ZoneId.of("UTC")));
 
-        var entity = DozerMapper.parseObject(taskDTO, TaskModel.class);
-
-        var dto = DozerMapper.parseObject(taskRepository.save(entity), TaskDTO.class);
-
+        var dto = DozerMapper.parseObject(taskRepository.save(task), TaskResponseDTO.class);
         dto.add(linkTo(methodOn(TaskController.class).listTaskById(dto.getKey())).withSelfRel());
 
         return dto;

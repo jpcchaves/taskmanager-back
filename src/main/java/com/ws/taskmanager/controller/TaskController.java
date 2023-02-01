@@ -2,6 +2,7 @@ package com.ws.taskmanager.controller;
 
 
 import com.ws.taskmanager.data.DTO.TaskDTO;
+import com.ws.taskmanager.data.DTO.TaskResponseDTO;
 import com.ws.taskmanager.services.TaskService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -41,7 +42,7 @@ public class TaskController {
             }
     )
     @PostMapping(value = "/new", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<TaskDTO> createTask(@RequestBody @Valid TaskDTO taskDTO)
+    public ResponseEntity<TaskResponseDTO> createTask(@RequestBody @Valid TaskDTO taskDTO)
         throws Exception {
         return ResponseEntity.status(HttpStatus.CREATED).body(taskService.createTask(taskDTO));
     }
