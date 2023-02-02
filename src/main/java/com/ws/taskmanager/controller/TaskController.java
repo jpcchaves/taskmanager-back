@@ -3,6 +3,7 @@ package com.ws.taskmanager.controller;
 
 import com.ws.taskmanager.data.DTO.TaskCreateDTO;
 import com.ws.taskmanager.data.DTO.TaskDTO;
+import com.ws.taskmanager.data.DTO.TaskPatchDTO;
 import com.ws.taskmanager.data.DTO.TaskResponseDTO;
 import com.ws.taskmanager.services.TaskService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -105,6 +106,25 @@ public class TaskController {
     public ResponseEntity<TaskResponseDTO> updateTask(@PathVariable(value = "id") UUID id, @RequestBody TaskDTO taskDTO)
         throws Exception {
         return ResponseEntity.status(HttpStatus.OK).body(taskService.updateTask(id, taskDTO));
+    }
+
+    @PatchMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Update the situation of a task (if it's concluded or not)",
+        description = "Updates a task by passing in a boolean that represents if the task is concluded or not",
+        tags = {"Tasks"},
+        responses = {
+            @ApiResponse(description = "Updated", responseCode = "200",
+                content = @Content(schema = @Schema(implementation = TaskDTO.class))
+            ),
+            @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+            @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+            @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+            @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
+        }
+    )
+    public ResponseEntity<TaskPatchDTO> updateTaskSituation(@PathVariable(value = "id") UUID id, @RequestBody TaskPatchDTO taskPatchDTO)
+        throws Exception {
+        return ResponseEntity.status(HttpStatus.OK).body(taskService.updateTaskSituation(id, taskPatchDTO));
     }
 
     @DeleteMapping(value = "/{id}")

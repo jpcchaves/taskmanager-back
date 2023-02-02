@@ -3,6 +3,7 @@ package com.ws.taskmanager.services;
 import com.ws.taskmanager.controller.TaskController;
 import com.ws.taskmanager.data.DTO.TaskCreateDTO;
 import com.ws.taskmanager.data.DTO.TaskDTO;
+import com.ws.taskmanager.data.DTO.TaskPatchDTO;
 import com.ws.taskmanager.data.DTO.TaskResponseDTO;
 import com.ws.taskmanager.exceptions.ResourceNotFoundException;
 import com.ws.taskmanager.mapper.DozerMapper;
@@ -93,9 +94,21 @@ public class TaskService {
 
     @Transactional
     public void deleteTask(UUID id) {
-        var task = taskRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não é possível deletar essa task pois ela não existe!"));
+        var entity = taskRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não é possível deletar essa task pois ela não existe!"));
         taskRepository.deleteById(id);
     }
 
+    @Transactional
+    public TaskPatchDTO updateTaskSituation(UUID id, TaskPatchDTO taskPatchDTO) throws Exception {
 
+        var entity = taskRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não é possível deletar essa task pois ela não existe!"));
+        entity.setConcluded(taskPatchDTO.getConcluded());
+
+        var task = DozerMapper.parseObject(taskRepository.save(entity), TaskModel.class);
+
+        var dto = DozerMapper.parseObject(task, TaskPatchDTO.class);
+        dto.add(linkTo(methodOn(TaskController.class).listTaskById(dto.getKey())).withSelfRel());
+
+        return dto;
+    }
 }
