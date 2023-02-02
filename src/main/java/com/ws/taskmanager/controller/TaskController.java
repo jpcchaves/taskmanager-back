@@ -36,7 +36,7 @@ public class TaskController {
             tags = {"Tasks"},
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200",
-                            content = @Content(schema = @Schema(implementation = TaskDTO.class))
+                            content = @Content(schema = @Schema(implementation = TaskResponseDTO.class))
                     ),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
@@ -58,7 +58,7 @@ public class TaskController {
                             content = {
                                     @Content(
                                             mediaType = "application/json",
-                                            array = @ArraySchema(schema = @Schema(implementation = TaskDTO.class))
+                                            array = @ArraySchema(schema = @Schema(implementation = TaskResponseDTO.class))
                                     )
                             }),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
@@ -76,7 +76,7 @@ public class TaskController {
             tags = {"Tasks"},
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200",
-                            content = @Content(schema = @Schema(implementation = TaskDTO.class))
+                            content = @Content(schema = @Schema(implementation = TaskResponseDTO.class))
                     ),
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
@@ -95,7 +95,7 @@ public class TaskController {
             tags = {"Tasks"},
             responses = {
                     @ApiResponse(description = "Updated", responseCode = "200",
-                            content = @Content(schema = @Schema(implementation = TaskDTO.class))
+                            content = @Content(schema = @Schema(implementation = TaskResponseDTO.class))
                     ),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
@@ -114,7 +114,7 @@ public class TaskController {
         tags = {"Tasks"},
         responses = {
             @ApiResponse(description = "Updated", responseCode = "200",
-                content = @Content(schema = @Schema(implementation = TaskDTO.class))
+                content = @Content(schema = @Schema(implementation = TaskResponseDTO.class))
             ),
             @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
             @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
