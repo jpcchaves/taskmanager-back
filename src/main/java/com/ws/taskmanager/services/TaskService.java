@@ -10,16 +10,16 @@ import com.ws.taskmanager.mapper.DozerMapper;
 import com.ws.taskmanager.models.TaskModel;
 import com.ws.taskmanager.repositories.TaskRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.scheduling.config.Task;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.List;
 import java.util.UUID;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Service
 public class TaskService {
@@ -43,22 +43,20 @@ public class TaskService {
         return dto;
     }
 
-    public List<TaskResponseDTO> listAllTasks() {
+    public Page<TaskResponseDTO> listAllTasks(Pageable pageable) {
 
-        var entities = DozerMapper.parseListObjects(taskRepository.findAll(), TaskModel.class);
-        var tasks = DozerMapper.parseListObjects(entities, TaskResponseDTO.class);
+        var tasksPage = taskRepository.findAll(pageable);
+        var tasksPageDTO = tasksPage.map(entity -> DozerMapper.parseObject(entity, TaskResponseDTO.class));
 
-        tasks
-            .forEach((task) -> {
-                try {
-                    task.add(linkTo(methodOn(TaskController.class).listTaskById(task.getKey())).withSelfRel());
-                } catch (Exception e) {
-                    throw new RuntimeException(e.getMessage());
-                }
-            });
+        tasksPageDTO.map(task -> {
+            try {
+                return task.add(linkTo(methodOn(TaskController.class).listTaskById(task.getKey())).withSelfRel());
+            } catch (Exception e) {
+                throw new ResourceNotFoundException("Ocorreu um erro na listagem de tasks!");
+            }
+        });
 
-        return tasks;
-
+        return tasksPageDTO;
     }
 
     public TaskResponseDTO listTaskById(UUID id) throws Exception {

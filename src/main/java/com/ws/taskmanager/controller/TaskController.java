@@ -12,12 +12,14 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -45,7 +47,7 @@ public class TaskController {
     )
     @PostMapping(value = "/new", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<TaskResponseDTO> createTask(@RequestBody @Valid TaskCreateDTO taskDTO)
-        throws Exception {
+            throws Exception {
         return ResponseEntity.status(HttpStatus.CREATED).body(taskService.createTask(taskDTO));
     }
 
@@ -67,8 +69,11 @@ public class TaskController {
                     @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
             }
     )
-    public ResponseEntity<List<TaskResponseDTO>> listAllTasks() {
-        return ResponseEntity.status(HttpStatus.OK).body(taskService.listAllTasks());
+    public ResponseEntity<Page<TaskResponseDTO>> listAllTasks(@RequestParam(value = "page", defaultValue = "0") Integer page, @RequestParam(value = "limit", defaultValue = "10") Integer limit) {
+
+        Pageable pageable = PageRequest.of(page, limit);
+
+        return ResponseEntity.status(HttpStatus.OK).body(taskService.listAllTasks(pageable));
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -104,26 +109,26 @@ public class TaskController {
             }
     )
     public ResponseEntity<TaskResponseDTO> updateTask(@PathVariable(value = "id") UUID id, @RequestBody TaskDTO taskDTO)
-        throws Exception {
+            throws Exception {
         return ResponseEntity.status(HttpStatus.OK).body(taskService.updateTask(id, taskDTO));
     }
 
     @PatchMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Update the situation of a task (if it's concluded or not)",
-        description = "Updates a task by passing in a boolean that represents if the task is concluded or not",
-        tags = {"Tasks"},
-        responses = {
-            @ApiResponse(description = "Updated", responseCode = "200",
-                content = @Content(schema = @Schema(implementation = TaskResponseDTO.class))
-            ),
-            @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
-            @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
-            @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
-            @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
-        }
+            description = "Updates a task by passing in a boolean that represents if the task is concluded or not",
+            tags = {"Tasks"},
+            responses = {
+                    @ApiResponse(description = "Updated", responseCode = "200",
+                            content = @Content(schema = @Schema(implementation = TaskResponseDTO.class))
+                    ),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+                    @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
+            }
     )
     public ResponseEntity<TaskPatchDTO> updateTaskSituation(@PathVariable(value = "id") UUID id, @RequestBody TaskPatchDTO taskPatchDTO)
-        throws Exception {
+            throws Exception {
         return ResponseEntity.status(HttpStatus.OK).body(taskService.updateTaskSituation(id, taskPatchDTO));
     }
 
