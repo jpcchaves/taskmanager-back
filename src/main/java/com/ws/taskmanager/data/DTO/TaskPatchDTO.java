@@ -15,7 +15,7 @@ public class TaskPatchDTO extends RepresentationModel<TaskResponseDTO> implement
   @Mapping("id")
   private UUID key;
 
-  @NotNull
+  @NotNull(message = "A situação da task é obrigatória!")
   private Boolean concluded;
 
   public UUID getKey() {

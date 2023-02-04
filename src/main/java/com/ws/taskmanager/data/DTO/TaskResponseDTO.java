@@ -18,13 +18,13 @@ public class TaskResponseDTO extends RepresentationModel<TaskResponseDTO> implem
   @Mapping("id")
   private UUID key;
 
-  @NotBlank
+  @NotBlank(message = "A task é obrigatória!")
   private String task;
 
-  @FutureOrPresent
+  @FutureOrPresent(message = "O prazo deve ser a data atual ou uma data futura.")
   private LocalDateTime deadline;
 
-  @NotNull
+  @NotNull(message = "A situação da task é obrigatória!")
   private Boolean concluded;
 
   private LocalDateTime createdAt;

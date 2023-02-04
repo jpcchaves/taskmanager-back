@@ -8,12 +8,12 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 public class TaskCreateDTO extends RepresentationModel<TaskCreateDTO> implements Serializable {
-    @NotBlank
+
+    @NotBlank(message = "A task é obrigatória!")
     private String task;
 
-    @FutureOrPresent
+    @FutureOrPresent(message = "O prazo deve ser a data atual ou uma data futura.")
     private LocalDateTime deadline;
-
 
     public String getTask() {
         return task;

@@ -113,7 +113,7 @@ public class TaskController {
                     @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
             }
     )
-    public ResponseEntity<TaskResponseDTO> updateTask(@PathVariable(value = "id") UUID id, @RequestBody TaskDTO taskDTO)
+    public ResponseEntity<TaskResponseDTO> updateTask(@PathVariable(value = "id") UUID id, @Valid @RequestBody TaskDTO taskDTO)
             throws Exception {
         return ResponseEntity.status(HttpStatus.OK).body(taskService.updateTask(id, taskDTO));
     }
@@ -132,7 +132,7 @@ public class TaskController {
                     @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
             }
     )
-    public ResponseEntity<TaskPatchDTO> updateTaskSituation(@PathVariable(value = "id") UUID id, @RequestBody TaskPatchDTO taskPatchDTO)
+    public ResponseEntity<TaskPatchDTO> updateTaskSituation(@PathVariable(value = "id") UUID id, @Valid @RequestBody TaskPatchDTO taskPatchDTO)
             throws Exception {
         return ResponseEntity.status(HttpStatus.OK).body(taskService.updateTaskSituation(id, taskPatchDTO));
     }

@@ -2,6 +2,10 @@ package com.ws.taskmanager.models;
 
 import jakarta.persistence.*;
 
+import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -15,12 +19,15 @@ public class TaskModel implements Serializable {
     private UUID id;
 
     @Column(nullable = false)
+    @NotBlank(message = "A task é obrigatória!")
     private String task;
 
     @Column(nullable = false)
+    @FutureOrPresent(message = "O prazo deve ser a data atual ou uma data futura.")
     private LocalDateTime deadline;
 
     @Column(nullable = false)
+    @NotNull(message = "A situação da task é obrigatória!")
     private Boolean concluded;
 
     @Column(name = "created_at")
