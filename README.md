@@ -107,9 +107,11 @@ Inicie o servidor (se estiver utilizando o IntelliJ, utilize o comando abaixo. C
 
 ## Aprendizados
 
-Aprendi a utilizar o framework Spring Boot para desenvolver uma API Rest com os principais endpoints: GET, PUT, POST, DELETE.
+Aprendi a utilizar o framework Spring Boot para desenvolver uma API Rest com os principais endpoints: GET, PUT, PATCH, POST, DELETE.
 
 Também foi de grande valia para aprender mais sobre tratamento de exceções em Java e validação dos dados enviados pelo usuário por meio da validação disponibilizada pelo Spring Boot (Bean Validation with Hibernate validator).
+
+Além disso, implementei HATEOAS (Hypermedia As the Engine Of Application State) e o padrão DTO, buscando deixar a API mais robusta e com padrões de projeto implementados, alcançando o nível REST (Representational State Transfer).
 
 
 
