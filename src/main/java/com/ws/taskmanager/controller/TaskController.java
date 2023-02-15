@@ -25,7 +25,7 @@ import java.util.UUID;
 
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping("api/v1/task")
+@RequestMapping("api/v1/tasks")
 public class TaskController {
 
     final TaskService taskService;
@@ -46,7 +46,7 @@ public class TaskController {
                     @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
             }
     )
-    @PostMapping(value = "/new", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<TaskResponseDTO> createTask(@RequestBody @Valid TaskCreateDTO taskDTO)
             throws Exception {
         return ResponseEntity.status(HttpStatus.CREATED).body(taskService.createTask(taskDTO));
