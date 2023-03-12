@@ -32,7 +32,7 @@ public class TaskService {
 
     @Transactional
     public TaskResponseDTO createTask(TaskCreateDTO taskDTO) throws Exception {
-
+        taskDTO.getDeadline().atZone(ZoneId.of("UTC"));
         var task = DozerMapper.parseObject(taskDTO, TaskModel.class);
         task.setCreatedAt(LocalDateTime.now(ZoneId.of("UTC")));
         task.setConcluded(false);
@@ -75,7 +75,7 @@ public class TaskService {
 
     @Transactional
     public TaskResponseDTO updateTask(UUID id, TaskDTO taskDTO) throws Exception {
-
+        taskDTO.getDeadline().atZone(ZoneId.of("UTC"));
         var entity = taskRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não foi encontrado uma task com o ID informado!"));
 
         entity.setTask(taskDTO.getTask());
