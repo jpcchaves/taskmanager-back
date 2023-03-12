@@ -1,9 +1,9 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/taskmanager?useTimezone=true&serverTimezone=UTC
+    url: jdbc:mysql://sql.freedb.tech:3306/freedb_taskmanager
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: root
-    password: MotorolaD3@
+    username: freedb_taskmanageradmin
+    password: 8D?Xf8#6y9GVekK
   jpa:
     hibernate:
       ddl-auto: update
