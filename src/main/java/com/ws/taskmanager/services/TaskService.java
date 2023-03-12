@@ -32,7 +32,7 @@ public class TaskService {
 
     @Transactional
     public TaskResponseDTO createTask(TaskCreateDTO taskDTO) throws Exception {
-        taskDTO.getDeadline().atZone(ZoneId.of("UTC"));
+        taskDTO.setDeadline(taskDTO.getDeadline().atZone(ZoneId.of("UTC")).toLocalDateTime());
         var task = DozerMapper.parseObject(taskDTO, TaskModel.class);
         task.setCreatedAt(LocalDateTime.now(ZoneId.of("UTC")));
         task.setConcluded(false);

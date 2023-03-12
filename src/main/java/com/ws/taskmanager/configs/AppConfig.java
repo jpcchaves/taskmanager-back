@@ -12,5 +12,4 @@ public class AppConfig {
     public void init(){
         TimeZone.setDefault(TimeZone.getTimeZone("UTC"));   // It will set UTC timezone
     }
-
 }
