@@ -102,7 +102,7 @@ public class TaskService {
 
         var entity = taskRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não é possível deletar essa task pois ela não existe!"));
 
-        if(entity.getDeadline().isAfter(LocalDateTime.now(ZoneId.of("UTC")))) {
+        if(entity.getDeadline().isBefore(LocalDateTime.now(ZoneId.of("UTC")))) {
             throw new BadRequestException("Não é possível atualizar a situaçao da tarefa porque seu prazo já está expirado!");
         }
 
