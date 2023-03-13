@@ -5,6 +5,7 @@ import com.ws.taskmanager.data.DTO.TaskCreateDTO;
 import com.ws.taskmanager.data.DTO.TaskDTO;
 import com.ws.taskmanager.data.DTO.TaskPatchDTO;
 import com.ws.taskmanager.data.DTO.TaskResponseDTO;
+import com.ws.taskmanager.exceptions.BadRequestException;
 import com.ws.taskmanager.exceptions.ResourceNotFoundException;
 import com.ws.taskmanager.mapper.DozerMapper;
 import com.ws.taskmanager.models.TaskModel;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Date;
 import java.util.UUID;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -32,7 +34,6 @@ public class TaskService {
 
     @Transactional
     public TaskResponseDTO createTask(TaskCreateDTO taskDTO) throws Exception {
-        taskDTO.setDeadline(taskDTO.getDeadline().atZone(ZoneId.of("UTC")).toLocalDateTime());
         var task = DozerMapper.parseObject(taskDTO, TaskModel.class);
         task.setCreatedAt(LocalDateTime.now(ZoneId.of("UTC")));
         task.setConcluded(false);
@@ -75,7 +76,6 @@ public class TaskService {
 
     @Transactional
     public TaskResponseDTO updateTask(UUID id, TaskDTO taskDTO) throws Exception {
-        taskDTO.getDeadline().atZone(ZoneId.of("UTC"));
         var entity = taskRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não foi encontrado uma task com o ID informado!"));
 
         entity.setTask(taskDTO.getTask());
@@ -100,6 +100,11 @@ public class TaskService {
     public TaskPatchDTO updateTaskSituation(UUID id, TaskPatchDTO taskPatchDTO) throws Exception {
 
         var entity = taskRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não é possível deletar essa task pois ela não existe!"));
+
+        if(entity.getDeadline().isAfter(LocalDateTime.now())) {
+            throw new BadRequestException("Não é possível marcar a tarefa como concluída pois o seu prazo de conclusão já expirou!");
+        }
+
         entity.setConcluded(taskPatchDTO.getConcluded());
 
         var task = DozerMapper.parseObject(taskRepository.save(entity), TaskModel.class);
