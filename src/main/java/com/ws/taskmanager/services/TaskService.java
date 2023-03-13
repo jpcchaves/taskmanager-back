@@ -15,9 +15,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Date;
+import java.time.chrono.ChronoLocalDateTime;
 import java.util.UUID;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -101,8 +102,8 @@ public class TaskService {
 
         var entity = taskRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não é possível deletar essa task pois ela não existe!"));
 
-        if(entity.getDeadline().isAfter(LocalDateTime.now())) {
-            throw new BadRequestException("Não é possível marcar a tarefa como concluída pois o seu prazo de conclusão já expirou!");
+        if(entity.getDeadline().isAfter(ChronoLocalDateTime.from(LocalDate.now(ZoneId.of("UTC"))))){
+            throw new BadRequestException("Não foi possível atualizar a tarefa porque o prazo de conclusão já foi encerrado");
         }
 
         entity.setConcluded(taskPatchDTO.getConcluded());
