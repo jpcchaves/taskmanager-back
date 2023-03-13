@@ -102,8 +102,8 @@ public class TaskService {
 
         var entity = taskRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não é possível deletar essa task pois ela não existe!"));
 
-        if(entity.getDeadline().isAfter(ChronoLocalDateTime.from(LocalDate.now(ZoneId.of("UTC"))))){
-            throw new BadRequestException("Não foi possível atualizar a tarefa porque o prazo de conclusão já foi encerrado");
+        if(entity.getDeadline().isAfter(LocalDateTime.now(ZoneId.of("UTC")))) {
+            throw new BadRequestException("Não é possível atualizar a situaçao da tarefa porque seu prazo já está expirado!");
         }
 
         entity.setConcluded(taskPatchDTO.getConcluded());
