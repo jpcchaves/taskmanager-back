@@ -11,6 +11,7 @@ spring:
     properties:
       hibernate:
         format_sql: true
+        time_zone: UTC
     database: MYSQL
     database-platform: org.hibernate.dialect.MySQL8Dialect
 spring-doc:
