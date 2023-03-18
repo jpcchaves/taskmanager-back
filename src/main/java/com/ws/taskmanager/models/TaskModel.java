@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "_task")
-public class TaskModel implements Serializable {
+public class    TaskModel implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
