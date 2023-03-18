@@ -20,4 +20,6 @@ spring-doc:
   swagger-ui:
     operations-sorter: alpha
     tags-sorter: alpha
-
+app:
+  jwt-secret: 781dcdf14b25e5191fe614744275d51b861c39d40cf8fcb4a6bebc310ca2a6f5
+  jwt-expiration-milliseconds: 604800000
