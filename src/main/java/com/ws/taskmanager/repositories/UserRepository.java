@@ -1,17 +1,17 @@
 package com.ws.taskmanager.repositories;
 
-import org.apache.catalina.User;
+import com.ws.taskmanager.models.UserModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<UserModel, Long> {
 
-    Optional<User> findByEmail(String email);
+    Optional<UserModel> findByEmail(String email);
 
-    Optional<User> findByUsernameOrEmail(String username, String email);
+    Optional<UserModel> findByUsernameOrEmail(String username, String email);
 
-    Optional<User> findByUsername(String username);
+    Optional<UserModel> findByUsername(String username);
 
     Boolean existsByUsername(String username);
 
