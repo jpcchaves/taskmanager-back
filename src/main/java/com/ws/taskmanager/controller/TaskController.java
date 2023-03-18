@@ -1,10 +1,10 @@
 package com.ws.taskmanager.controller;
 
 
-import com.ws.taskmanager.data.DTO.TaskCreateDTO;
-import com.ws.taskmanager.data.DTO.TaskDTO;
-import com.ws.taskmanager.data.DTO.TaskPatchDTO;
-import com.ws.taskmanager.data.DTO.TaskResponseDTO;
+import com.ws.taskmanager.data.DTO.TaskCreateDto;
+import com.ws.taskmanager.data.DTO.TaskDto;
+import com.ws.taskmanager.data.DTO.TaskPatchDto;
+import com.ws.taskmanager.data.DTO.TaskResponseDto;
 import com.ws.taskmanager.services.TaskService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -39,7 +39,7 @@ public class TaskController {
             tags = {"Tasks"},
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200",
-                            content = @Content(schema = @Schema(implementation = TaskResponseDTO.class))
+                            content = @Content(schema = @Schema(implementation = TaskResponseDto.class))
                     ),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
@@ -47,7 +47,7 @@ public class TaskController {
             }
     )
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<TaskResponseDTO> createTask(@RequestBody @Valid TaskCreateDTO taskDTO)
+    public ResponseEntity<TaskResponseDto> createTask(@RequestBody @Valid TaskCreateDto taskDTO)
             throws Exception {
         return ResponseEntity.status(HttpStatus.CREATED).body(taskService.createTask(taskDTO));
     }
@@ -61,7 +61,7 @@ public class TaskController {
                             content = {
                                     @Content(
                                             mediaType = "application/json",
-                                            array = @ArraySchema(schema = @Schema(implementation = TaskResponseDTO.class))
+                                            array = @ArraySchema(schema = @Schema(implementation = TaskResponseDto.class))
                                     )
                             }),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
@@ -70,7 +70,7 @@ public class TaskController {
                     @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
             }
     )
-    public ResponseEntity<Page<TaskResponseDTO>> listAllTasks(@RequestParam(value = "page", defaultValue = "0") Integer page,
+    public ResponseEntity<Page<TaskResponseDto>> listAllTasks(@RequestParam(value = "page", defaultValue = "0") Integer page,
                                                               @RequestParam(value = "size", defaultValue = "10") Integer size,
                                                               @RequestParam(value = "direction", defaultValue = "asc") String direction) {
 
@@ -86,7 +86,7 @@ public class TaskController {
             tags = {"Tasks"},
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200",
-                            content = @Content(schema = @Schema(implementation = TaskResponseDTO.class))
+                            content = @Content(schema = @Schema(implementation = TaskResponseDto.class))
                     ),
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
@@ -95,7 +95,7 @@ public class TaskController {
                     @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
             }
     )
-    public ResponseEntity<TaskResponseDTO> listTaskById(@PathVariable(value = "id") UUID id) throws Exception {
+    public ResponseEntity<TaskResponseDto> listTaskById(@PathVariable(value = "id") UUID id) throws Exception {
         return ResponseEntity.status(HttpStatus.OK).body(taskService.listTaskById(id));
     }
 
@@ -105,7 +105,7 @@ public class TaskController {
             tags = {"Tasks"},
             responses = {
                     @ApiResponse(description = "Updated", responseCode = "200",
-                            content = @Content(schema = @Schema(implementation = TaskResponseDTO.class))
+                            content = @Content(schema = @Schema(implementation = TaskResponseDto.class))
                     ),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
@@ -113,7 +113,7 @@ public class TaskController {
                     @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
             }
     )
-    public ResponseEntity<TaskResponseDTO> updateTask(@PathVariable(value = "id") UUID id, @Valid @RequestBody TaskDTO taskDTO)
+    public ResponseEntity<TaskResponseDto> updateTask(@PathVariable(value = "id") UUID id, @Valid @RequestBody TaskDto taskDTO)
             throws Exception {
         return ResponseEntity.status(HttpStatus.OK).body(taskService.updateTask(id, taskDTO));
     }
@@ -124,7 +124,7 @@ public class TaskController {
             tags = {"Tasks"},
             responses = {
                     @ApiResponse(description = "Updated", responseCode = "200",
-                            content = @Content(schema = @Schema(implementation = TaskResponseDTO.class))
+                            content = @Content(schema = @Schema(implementation = TaskResponseDto.class))
                     ),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
@@ -132,7 +132,7 @@ public class TaskController {
                     @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
             }
     )
-    public ResponseEntity<TaskPatchDTO> updateTaskSituation(@PathVariable(value = "id") UUID id, @Valid @RequestBody TaskPatchDTO taskPatchDTO)
+    public ResponseEntity<TaskPatchDto> updateTaskSituation(@PathVariable(value = "id") UUID id, @Valid @RequestBody TaskPatchDto taskPatchDTO)
             throws Exception {
         return ResponseEntity.status(HttpStatus.OK).body(taskService.updateTaskSituation(id, taskPatchDTO));
     }

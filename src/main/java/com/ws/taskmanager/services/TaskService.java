@@ -1,10 +1,10 @@
 package com.ws.taskmanager.services;
 
 import com.ws.taskmanager.controller.TaskController;
-import com.ws.taskmanager.data.DTO.TaskCreateDTO;
-import com.ws.taskmanager.data.DTO.TaskDTO;
-import com.ws.taskmanager.data.DTO.TaskPatchDTO;
-import com.ws.taskmanager.data.DTO.TaskResponseDTO;
+import com.ws.taskmanager.data.DTO.TaskCreateDto;
+import com.ws.taskmanager.data.DTO.TaskDto;
+import com.ws.taskmanager.data.DTO.TaskPatchDto;
+import com.ws.taskmanager.data.DTO.TaskResponseDto;
 import com.ws.taskmanager.exceptions.BadRequestException;
 import com.ws.taskmanager.exceptions.ResourceNotFoundException;
 import com.ws.taskmanager.mapper.DozerMapper;
@@ -15,10 +15,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.chrono.ChronoLocalDateTime;
 import java.util.UUID;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -34,21 +32,21 @@ public class TaskService {
     }
 
     @Transactional
-    public TaskResponseDTO createTask(TaskCreateDTO taskDTO) throws Exception {
+    public TaskResponseDto createTask(TaskCreateDto taskDTO) throws Exception {
         var task = DozerMapper.parseObject(taskDTO, TaskModel.class);
         task.setCreatedAt(LocalDateTime.now(ZoneId.of("UTC")));
         task.setConcluded(false);
 
-        var dto = DozerMapper.parseObject(taskRepository.save(task), TaskResponseDTO.class);
+        var dto = DozerMapper.parseObject(taskRepository.save(task), TaskResponseDto.class);
         dto.add(linkTo(methodOn(TaskController.class).listTaskById(dto.getKey())).withSelfRel());
 
         return dto;
     }
 
-    public Page<TaskResponseDTO> listAllTasks(Pageable pageable) {
+    public Page<TaskResponseDto> listAllTasks(Pageable pageable) {
 
         var tasksPage = taskRepository.findAll(pageable);
-        var tasksPageDTO = tasksPage.map(entity -> DozerMapper.parseObject(entity, TaskResponseDTO.class));
+        var tasksPageDTO = tasksPage.map(entity -> DozerMapper.parseObject(entity, TaskResponseDto.class));
 
         tasksPageDTO.map(task -> {
             try {
@@ -61,13 +59,13 @@ public class TaskService {
         return tasksPageDTO;
     }
 
-    public TaskResponseDTO listTaskById(UUID id) throws Exception {
+    public TaskResponseDto listTaskById(UUID id) throws Exception {
 
         var entity = taskRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não foi encontrado uma task com o ID informado!"));
 
         var task = DozerMapper.parseObject(entity, TaskModel.class);
 
-        var dto = DozerMapper.parseObject(task, TaskResponseDTO.class);
+        var dto = DozerMapper.parseObject(task, TaskResponseDto.class);
 
 
         dto.add(linkTo(methodOn(TaskController.class).listTaskById(id)).withSelfRel());
@@ -76,7 +74,7 @@ public class TaskService {
     }
 
     @Transactional
-    public TaskResponseDTO updateTask(UUID id, TaskDTO taskDTO) throws Exception {
+    public TaskResponseDto updateTask(UUID id, TaskDto taskDTO) throws Exception {
         var entity = taskRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não foi encontrado uma task com o ID informado!"));
 
         entity.setTask(taskDTO.getTask());
@@ -85,7 +83,7 @@ public class TaskService {
 
         var task = DozerMapper.parseObject(taskRepository.save(entity), TaskModel.class);
 
-        var dto = DozerMapper.parseObject(task, TaskResponseDTO.class);
+        var dto = DozerMapper.parseObject(task, TaskResponseDto.class);
         dto.add(linkTo(methodOn(TaskController.class).listTaskById(dto.getKey())).withSelfRel());
 
         return dto;
@@ -98,11 +96,11 @@ public class TaskService {
     }
 
     @Transactional
-    public TaskPatchDTO updateTaskSituation(UUID id, TaskPatchDTO taskPatchDTO) throws Exception {
+    public TaskPatchDto updateTaskSituation(UUID id, TaskPatchDto taskPatchDTO) throws Exception {
 
         var entity = taskRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não é possível deletar essa task pois ela não existe!"));
 
-        if(entity.getDeadline().isBefore(LocalDateTime.now(ZoneId.of("UTC")))) {
+        if (entity.getDeadline().isBefore(LocalDateTime.now(ZoneId.of("UTC")))) {
             throw new BadRequestException("Não é possível atualizar a situaçao da tarefa porque seu prazo já está expirado!");
         }
 
@@ -110,7 +108,7 @@ public class TaskService {
 
         var task = DozerMapper.parseObject(taskRepository.save(entity), TaskModel.class);
 
-        var dto = DozerMapper.parseObject(task, TaskPatchDTO.class);
+        var dto = DozerMapper.parseObject(task, TaskPatchDto.class);
         dto.add(linkTo(methodOn(TaskController.class).listTaskById(dto.getKey())).withSelfRel());
 
         return dto;

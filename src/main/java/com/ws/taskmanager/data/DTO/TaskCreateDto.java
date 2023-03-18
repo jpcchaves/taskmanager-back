@@ -7,7 +7,7 @@ import org.springframework.hateoas.RepresentationModel;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class TaskCreateDTO extends RepresentationModel<TaskCreateDTO> implements Serializable {
+public class TaskCreateDto extends RepresentationModel<TaskCreateDto> implements Serializable {
 
     @NotBlank(message = "A task é obrigatória!")
     private String task;
@@ -37,7 +37,7 @@ public class TaskCreateDTO extends RepresentationModel<TaskCreateDTO> implements
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
 
-        TaskCreateDTO that = (TaskCreateDTO) o;
+        TaskCreateDto that = (TaskCreateDto) o;
 
         if (!task.equals(that.task)) return false;
         return deadline.equals(that.deadline);
