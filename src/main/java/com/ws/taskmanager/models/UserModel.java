@@ -2,6 +2,7 @@ package com.ws.taskmanager.models;
 
 import jakarta.persistence.*;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -36,17 +37,27 @@ public class UserModel {
     )
     private Set<RoleModel> roles;
 
+    @OneToMany(mappedBy = "user")
+    private List<TaskModel> tasks;
+
     public UserModel() {
 
     }
 
-    public UserModel(Long id, String name, String username, String email, String password, Set<RoleModel> roles) {
+    public UserModel(Long id,
+                     String name,
+                     String username,
+                     String email,
+                     String password,
+                     Set<RoleModel> roles,
+                     List<TaskModel> tasks) {
         this.id = id;
         this.name = name;
         this.username = username;
         this.email = email;
         this.password = password;
         this.roles = roles;
+        this.tasks = tasks;
     }
 
     public Long getId() {
@@ -95,5 +106,13 @@ public class UserModel {
 
     public void setRoles(Set<RoleModel> roles) {
         this.roles = roles;
+    }
+
+    public List<TaskModel> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(List<TaskModel> tasks) {
+        this.tasks = tasks;
     }
 }

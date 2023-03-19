@@ -1,18 +1,17 @@
 package com.ws.taskmanager.models;
 
 import jakarta.persistence.*;
-
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
 @Table(name = "_task")
-public class    TaskModel implements Serializable {
+public class TaskModel implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -32,6 +31,29 @@ public class    TaskModel implements Serializable {
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+
+    @ManyToOne(
+            fetch = FetchType.EAGER
+    )
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserModel user;
+
+    public TaskModel() {
+    }
+
+    public TaskModel(UUID id,
+                     String task,
+                     LocalDateTime deadline,
+                     Boolean concluded,
+                     LocalDateTime createdAt,
+                     UserModel user) {
+        this.id = id;
+        this.task = task;
+        this.deadline = deadline;
+        this.concluded = concluded;
+        this.createdAt = createdAt;
+        this.user = user;
+    }
 
     public UUID getId() {
         return id;
@@ -73,15 +95,12 @@ public class    TaskModel implements Serializable {
         this.createdAt = createdAt;
     }
 
-    @Override
-    public String toString() {
-        return "TaskModel{" +
-                "id=" + id +
-                ", task='" + task + '\'' +
-                ", deadline=" + deadline +
-                ", concluded=" + concluded +
-                ", createdAt=" + createdAt +
-                '}';
+    public UserModel getUserModel() {
+        return user;
+    }
+
+    public void setUserModel(UserModel userModel) {
+        this.user = userModel;
     }
 }
 
