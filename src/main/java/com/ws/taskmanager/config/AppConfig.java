@@ -1,10 +1,9 @@
-package com.ws.taskmanager.configs;
+package com.ws.taskmanager.config;
 
 import jakarta.annotation.PostConstruct;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.TimeZone;
-import java.util.spi.TimeZoneNameProvider;
 
 @Configuration
 public class AppConfig {

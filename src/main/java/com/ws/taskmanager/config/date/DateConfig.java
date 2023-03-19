@@ -1,4 +1,4 @@
-package com.ws.taskmanager.configs.date;
+package com.ws.taskmanager.config.date;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;

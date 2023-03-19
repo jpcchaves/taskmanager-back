@@ -3,18 +3,17 @@ package com.ws.taskmanager.data.DTO;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.github.dozermapper.core.Mapping;
-import jakarta.persistence.Id;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
-import org.springframework.hateoas.RepresentationModel;
 
 @JsonPropertyOrder({"id", "task", "concluded", "deadline", "createdAt"})
-public class TaskDTO extends RepresentationModel<TaskDTO> implements Serializable {
+public class TaskDto extends RepresentationModel<TaskDto> implements Serializable {
 
     @JsonProperty("id")
     @Mapping("id")
@@ -73,7 +72,7 @@ public class TaskDTO extends RepresentationModel<TaskDTO> implements Serializabl
             return false;
         }
 
-        TaskDTO taskDTO = (TaskDTO) o;
+        TaskDto taskDTO = (TaskDto) o;
 
         if (!getKey().equals(taskDTO.getKey())) {
             return false;
