@@ -6,6 +6,7 @@ import com.ws.taskmanager.data.DTO.TaskDto;
 import com.ws.taskmanager.data.DTO.TaskPatchDto;
 import com.ws.taskmanager.data.DTO.TaskResponseDto;
 import com.ws.taskmanager.services.TaskService;
+import com.ws.taskmanager.services.impl.TaskServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -28,9 +29,9 @@ import java.util.UUID;
 @RequestMapping("api/v1/tasks")
 public class TaskController {
 
-    final TaskService taskService;
+    private final TaskService taskService;
 
-    public TaskController(TaskService taskService) {
+    public TaskController(TaskServiceImpl taskService) {
         this.taskService = taskService;
     }
 
