@@ -1,7 +1,9 @@
 package com.ws.taskmanager.services.impl;
 
+import com.ws.taskmanager.data.DTO.JWTAuthResponseDto;
 import com.ws.taskmanager.data.DTO.LoginDto;
 import com.ws.taskmanager.data.DTO.RegisterDto;
+import com.ws.taskmanager.data.DTO.UserDto;
 import com.ws.taskmanager.exceptions.BadRequestException;
 import com.ws.taskmanager.models.RoleModel;
 import com.ws.taskmanager.models.UserModel;
@@ -43,7 +45,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String login(LoginDto loginDto) {
+    public JWTAuthResponseDto login(LoginDto loginDto) {
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(
                         loginDto.getUsernameOrEmail(), loginDto.getPassword()
@@ -51,7 +53,18 @@ public class AuthServiceImpl implements AuthService {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        return jwtTokenProvider.generateToken(authentication);
+        String token = jwtTokenProvider.generateToken(authentication);
+
+        var user = userRepository.findByUsernameOrEmail(loginDto.getUsernameOrEmail(), loginDto.getUsernameOrEmail()).get();
+
+        var userDto = copyPropertiesFromUserToUserDto(user);
+
+        JWTAuthResponseDto jwtAuthResponseDto = new JWTAuthResponseDto();
+        
+        jwtAuthResponseDto.setAccessToken(token);
+        jwtAuthResponseDto.setUser(userDto);
+
+        return jwtAuthResponseDto;
     }
 
     @Override
@@ -83,5 +96,14 @@ public class AuthServiceImpl implements AuthService {
         userRepository.save(user);
 
         return "User registered successfully";
+    }
+
+    private UserDto copyPropertiesFromUserToUserDto(UserModel user) {
+        UserDto userDto = new UserDto();
+        userDto.setId(user.getId());
+        userDto.setEmail(user.getEmail());
+        userDto.setName(user.getName());
+        userDto.setUsername(user.getUsername());
+        return userDto;
     }
 }

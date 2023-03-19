@@ -57,7 +57,7 @@ public class SecurityConfig {
                                 .authenticationEntryPoint(authenticationEntryPoint)
                 )
                 .sessionManagement(session ->
-                        sessionf
+                        session
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 );
 
