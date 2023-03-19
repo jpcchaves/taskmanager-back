@@ -1,5 +1,6 @@
 package com.ws.taskmanager.config.security;
 
+import com.ws.taskmanager.security.CustomAccessDeniedHandler;
 import com.ws.taskmanager.security.JwtAuthenticationEntrypoint;
 import com.ws.taskmanager.security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
@@ -21,14 +22,17 @@ public class SecurityConfig {
 
     private final UserDetailsService userDetailsService;
     private final JwtAuthenticationEntrypoint authenticationEntryPoint;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
     private JwtAuthenticationFilter authenticationFilter;
 
     public SecurityConfig(JwtAuthenticationEntrypoint authenticationEntryPoint,
                           UserDetailsService userDetailsService,
-                          JwtAuthenticationFilter authenticationFilter) {
+                          JwtAuthenticationFilter authenticationFilter,
+                          CustomAccessDeniedHandler customAccessDeniedHandler) {
         this.authenticationEntryPoint = authenticationEntryPoint;
         this.userDetailsService = userDetailsService;
         this.authenticationFilter = authenticationFilter;
+        this.customAccessDeniedHandler = customAccessDeniedHandler;
     }
 
     @Bean
@@ -47,7 +51,7 @@ public class SecurityConfig {
         http.csrf().disable()
                 .authorizeHttpRequests(authorize ->
                         authorize
-                                .requestMatchers("/api/v1/auth/**")
+                                .requestMatchers("/api/v1/auth/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html")
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()
@@ -55,6 +59,7 @@ public class SecurityConfig {
                 .exceptionHandling(exception ->
                         exception
                                 .authenticationEntryPoint(authenticationEntryPoint)
+                                .accessDeniedHandler(customAccessDeniedHandler)
                 )
                 .sessionManagement(session ->
                         session
