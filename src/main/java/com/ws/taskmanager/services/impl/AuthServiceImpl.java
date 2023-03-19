@@ -1,10 +1,8 @@
 package com.ws.taskmanager.services.impl;
 
-import com.ws.taskmanager.data.DTO.JWTAuthResponseDto;
-import com.ws.taskmanager.data.DTO.LoginDto;
-import com.ws.taskmanager.data.DTO.RegisterDto;
-import com.ws.taskmanager.data.DTO.UserDto;
+import com.ws.taskmanager.data.DTO.*;
 import com.ws.taskmanager.exceptions.BadRequestException;
+import com.ws.taskmanager.mapper.DozerMapper;
 import com.ws.taskmanager.models.RoleModel;
 import com.ws.taskmanager.models.UserModel;
 import com.ws.taskmanager.repositories.RoleRepository;
@@ -60,7 +58,7 @@ public class AuthServiceImpl implements AuthService {
         var userDto = copyPropertiesFromUserToUserDto(user);
 
         JWTAuthResponseDto jwtAuthResponseDto = new JWTAuthResponseDto();
-        
+
         jwtAuthResponseDto.setAccessToken(token);
         jwtAuthResponseDto.setUser(userDto);
 
@@ -68,7 +66,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String register(RegisterDto registerDto) {
+    public RegisterResponseDto register(RegisterDto registerDto) {
         // verify if user already registered
         if (userRepository.existsByUsername(registerDto.getUsername())) {
             throw new BadRequestException("Já existe um usuário cadastrado com o usuário informado");
@@ -79,23 +77,20 @@ public class AuthServiceImpl implements AuthService {
             throw new BadRequestException("Já existe um usuário cadastrado com o email informado");
         }
 
-        UserModel user = new UserModel();
-        user.setName(registerDto.getName());
-        user.setEmail(registerDto.getEmail());
-        user.setUsername(registerDto.getUsername());
-        user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
 
         Set<RoleModel> roles = new HashSet<>();
         Optional<RoleModel> userRole = roleRepository.findByName("ROLE_USER");
+
+        var user = copyPropertiesFromRegisterDtoToUser(registerDto);
 
         if (userRole.isPresent()) {
             roles.add(userRole.get());
             user.setRoles(roles);
         }
 
-        userRepository.save(user);
+        var newUser = userRepository.save(user);
 
-        return "User registered successfully";
+        return DozerMapper.parseObject(newUser, RegisterResponseDto.class);
     }
 
     private UserDto copyPropertiesFromUserToUserDto(UserModel user) {
@@ -105,5 +100,14 @@ public class AuthServiceImpl implements AuthService {
         userDto.setName(user.getName());
         userDto.setUsername(user.getUsername());
         return userDto;
+    }
+
+    private UserModel copyPropertiesFromRegisterDtoToUser(RegisterDto registerDto) {
+        UserModel user = new UserModel();
+        user.setName(registerDto.getName());
+        user.setEmail(registerDto.getEmail());
+        user.setUsername(registerDto.getUsername());
+        user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
+        return user;
     }
 }
