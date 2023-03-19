@@ -8,11 +8,10 @@ import com.ws.taskmanager.mapper.DozerMapper;
 import com.ws.taskmanager.models.TaskModel;
 import com.ws.taskmanager.repositories.TaskRepository;
 import com.ws.taskmanager.repositories.UserRepository;
+import com.ws.taskmanager.services.SecurityContextService;
 import com.ws.taskmanager.services.TaskService;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -28,10 +27,14 @@ public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
+    private final SecurityContextService securityContextService;
 
-    public TaskServiceImpl(TaskRepository taskRepository, UserRepository userRepository) {
+    public TaskServiceImpl(TaskRepository taskRepository,
+                           UserRepository userRepository,
+                           SecurityContextService securityContextService) {
         this.taskRepository = taskRepository;
         this.userRepository = userRepository;
+        this.securityContextService = securityContextService;
     }
 
     @Transactional
@@ -41,10 +44,9 @@ public class TaskServiceImpl implements TaskService {
         task.setCreatedAt(LocalDateTime.now(ZoneId.of("UTC")));
         task.setConcluded(false);
 
-        var securityContextUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        var user = userRepository.findByUsernameOrEmail(securityContextUser.getUsername(), securityContextUser.getUsername());
+        var user = securityContextService.getCurrentLoggedUser();
 
-        task.setUserModel(user.get());
+        task.setUserModel(user);
 
         var dto = DozerMapper.parseObject(taskRepository.save(task), TaskResponseDto.class);
         dto.add(linkTo(methodOn(TaskController.class).listTaskById(dto.getKey())).withSelfRel());
@@ -55,10 +57,9 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public TasksResponseDtoPaginated findByUserWithPagination(Pageable pageable) {
 
-        var securityContextUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        var user = userRepository.findByUsernameOrEmail(securityContextUser.getUsername(), securityContextUser.getUsername());
+        var user = securityContextService.getCurrentLoggedUser();
 
-        var tasksPage = taskRepository.findByUser(user.get(), pageable);
+        var tasksPage = taskRepository.findByUser(user, pageable);
 
         var tasksDto = tasksPage.getContent().stream().map(task ->
                 DozerMapper.parseObject(task, TaskResponseDto.class)
