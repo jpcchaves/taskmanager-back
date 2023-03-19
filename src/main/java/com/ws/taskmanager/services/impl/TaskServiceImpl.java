@@ -1,10 +1,7 @@
 package com.ws.taskmanager.services.impl;
 
 import com.ws.taskmanager.controller.TaskController;
-import com.ws.taskmanager.data.DTO.TaskCreateDto;
-import com.ws.taskmanager.data.DTO.TaskDto;
-import com.ws.taskmanager.data.DTO.TaskPatchDto;
-import com.ws.taskmanager.data.DTO.TaskResponseDto;
+import com.ws.taskmanager.data.DTO.*;
 import com.ws.taskmanager.exceptions.BadRequestException;
 import com.ws.taskmanager.exceptions.ResourceNotFoundException;
 import com.ws.taskmanager.mapper.DozerMapper;
@@ -13,7 +10,6 @@ import com.ws.taskmanager.repositories.TaskRepository;
 import com.ws.taskmanager.repositories.UserRepository;
 import com.ws.taskmanager.services.TaskService;
 import jakarta.transaction.Transactional;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -55,20 +52,35 @@ public class TaskServiceImpl implements TaskService {
         return dto;
     }
 
-    public Page<TaskResponseDto> listAllTasks(Pageable pageable) {
+    @Override
+    public TasksResponseDtoPaginated findByUserWithPagination(Pageable pageable) {
 
-        var tasksPage = taskRepository.findAll(pageable);
-        var tasksPageDTO = tasksPage.map(entity -> DozerMapper.parseObject(entity, TaskResponseDto.class));
+        var securityContextUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        var user = userRepository.findByUsernameOrEmail(securityContextUser.getUsername(), securityContextUser.getUsername());
 
-        tasksPageDTO.map(task -> {
+        var tasksPage = taskRepository.findByUser(user.get(), pageable);
+
+        var tasksDto = tasksPage.getContent().stream().map(task ->
+                DozerMapper.parseObject(task, TaskResponseDto.class)
+        ).toList();
+
+        var tasksDtoHateoas = tasksDto.stream().map(task -> {
             try {
                 return task.add(linkTo(methodOn(TaskController.class).listTaskById(task.getKey())).withSelfRel());
             } catch (Exception e) {
-                throw new ResourceNotFoundException("Ocorreu um erro na listagem de tasks!");
+                throw new RuntimeException(e);
             }
-        });
+        }).collect(Collectors.toList());
 
-        return tasksPageDTO;
+        TasksResponseDtoPaginated taskResponseDto = new TasksResponseDtoPaginated();
+        taskResponseDto.setContent(tasksDtoHateoas);
+        taskResponseDto.setPageNo(tasksPage.getNumber());
+        taskResponseDto.setPageSize(tasksPage.getSize());
+        taskResponseDto.setTotalElements(tasksPage.getTotalElements());
+        taskResponseDto.setTotalPages(tasksPage.getTotalPages());
+        taskResponseDto.setLast(tasksPage.isLast());
+
+        return taskResponseDto;
     }
 
     public TaskResponseDto listTaskById(UUID id) throws Exception {
