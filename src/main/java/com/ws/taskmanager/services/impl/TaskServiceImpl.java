@@ -6,12 +6,15 @@ import com.ws.taskmanager.exceptions.BadRequestException;
 import com.ws.taskmanager.exceptions.ResourceNotFoundException;
 import com.ws.taskmanager.mapper.DozerMapper;
 import com.ws.taskmanager.models.TaskModel;
+import com.ws.taskmanager.models.UserModel;
 import com.ws.taskmanager.repositories.TaskRepository;
 import com.ws.taskmanager.repositories.UserRepository;
 import com.ws.taskmanager.services.SecurityContextService;
 import com.ws.taskmanager.services.TaskService;
 import jakarta.transaction.Transactional;
+import org.apache.catalina.User;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -26,14 +29,11 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
-    private final UserRepository userRepository;
     private final SecurityContextService securityContextService;
 
     public TaskServiceImpl(TaskRepository taskRepository,
-                           UserRepository userRepository,
                            SecurityContextService securityContextService) {
         this.taskRepository = taskRepository;
-        this.userRepository = userRepository;
         this.securityContextService = securityContextService;
     }
 
@@ -85,13 +85,17 @@ public class TaskServiceImpl implements TaskService {
     }
 
     public TaskResponseDto listTaskById(UUID id) throws Exception {
+        var user = securityContextService.getCurrentLoggedUser();
 
-        var entity = taskRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não foi encontrado uma task com o ID informado!"));
+        var entity = taskRepository.findByUserAndId(user, id);
+
+        if (entity == null) {
+            throw new ResourceNotFoundException("Não foi encontrado uma task com o ID informado!");
+        }
 
         var task = DozerMapper.parseObject(entity, TaskModel.class);
 
         var dto = DozerMapper.parseObject(task, TaskResponseDto.class);
-
 
         dto.add(linkTo(methodOn(TaskController.class).listTaskById(id)).withSelfRel());
 
