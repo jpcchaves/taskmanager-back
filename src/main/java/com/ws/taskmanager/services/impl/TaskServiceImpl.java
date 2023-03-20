@@ -1,5 +1,6 @@
 package com.ws.taskmanager.services.impl;
 
+import com.ws.taskmanager.common.TaskUtils;
 import com.ws.taskmanager.controller.TaskController;
 import com.ws.taskmanager.data.DTO.*;
 import com.ws.taskmanager.exceptions.BadRequestException;
@@ -75,7 +76,7 @@ public class TaskServiceImpl implements TaskService {
             }
         }).collect(Collectors.toList());
 
-        return buildTaskResponseDtoPaginated(tasksDtoHateoas, tasksPage);
+        return TaskUtils.buildTaskResponseDtoPaginated(tasksDtoHateoas, tasksPage);
     }
 
     public TaskResponseDto listTaskById(UUID id) throws Exception {
@@ -107,11 +108,9 @@ public class TaskServiceImpl implements TaskService {
             throw new ResourceNotFoundException("Não foi encontrado uma task com o ID informado!");
         }
 
-        entity.setTask(taskDTO.getTask());
-        entity.setConcluded(taskDTO.getConcluded());
-        entity.setDeadline(taskDTO.getDeadline());
+        var updatedTask = TaskUtils.copyPropertiesFromTaskModelToTaskDto(entity, taskDTO);
 
-        var task = DozerMapper.parseObject(taskRepository.save(entity), TaskModel.class);
+        var task = DozerMapper.parseObject(taskRepository.save(updatedTask), TaskModel.class);
 
         var dto = DozerMapper.parseObject(task, TaskResponseDto.class);
         dto.add(linkTo(methodOn(TaskController.class).listTaskById(dto.getKey())).withSelfRel());
@@ -154,14 +153,5 @@ public class TaskServiceImpl implements TaskService {
         return dto;
     }
 
-    private TasksResponseDtoPaginated buildTaskResponseDtoPaginated(List<TaskResponseDto> tasksDtoHateoas, Page<TaskModel> tasksPage) {
-        TasksResponseDtoPaginated taskResponseDto = new TasksResponseDtoPaginated();
-        taskResponseDto.setContent(tasksDtoHateoas);
-        taskResponseDto.setPageNo(tasksPage.getNumber());
-        taskResponseDto.setPageSize(tasksPage.getSize());
-        taskResponseDto.setTotalElements(tasksPage.getTotalElements());
-        taskResponseDto.setTotalPages(tasksPage.getTotalPages());
-        taskResponseDto.setLast(tasksPage.isLast());
-        return taskResponseDto;
-    }
+
 }
