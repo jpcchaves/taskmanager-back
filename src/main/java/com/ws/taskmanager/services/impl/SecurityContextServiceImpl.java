@@ -10,20 +10,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class SecurityContextServiceImpl implements SecurityContextService {
 
-    private final UserRepository userRepository;
-
-    public SecurityContextServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
     @Override
     public UserModel getCurrentLoggedUser() {
-        var securityContextUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        var user = userRepository.findByUsernameOrEmail(securityContextUser.getUsername(), securityContextUser.getUsername());
-        if (user.isPresent()) {
-            return user.get();
-        } else {
-            throw new RuntimeException("Ocorreu um erro inesperado.");
-        }
+        return (UserModel) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 }
