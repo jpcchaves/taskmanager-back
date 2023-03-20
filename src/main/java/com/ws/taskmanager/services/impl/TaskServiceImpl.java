@@ -13,12 +13,14 @@ import com.ws.taskmanager.services.SecurityContextService;
 import com.ws.taskmanager.services.TaskService;
 import jakarta.transaction.Transactional;
 import org.apache.catalina.User;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -73,15 +75,7 @@ public class TaskServiceImpl implements TaskService {
             }
         }).collect(Collectors.toList());
 
-        TasksResponseDtoPaginated taskResponseDto = new TasksResponseDtoPaginated();
-        taskResponseDto.setContent(tasksDtoHateoas);
-        taskResponseDto.setPageNo(tasksPage.getNumber());
-        taskResponseDto.setPageSize(tasksPage.getSize());
-        taskResponseDto.setTotalElements(tasksPage.getTotalElements());
-        taskResponseDto.setTotalPages(tasksPage.getTotalPages());
-        taskResponseDto.setLast(tasksPage.isLast());
-
-        return taskResponseDto;
+        return buildTaskResponseDtoPaginated(tasksDtoHateoas, tasksPage);
     }
 
     public TaskResponseDto listTaskById(UUID id) throws Exception {
@@ -104,7 +98,14 @@ public class TaskServiceImpl implements TaskService {
 
     @Transactional
     public TaskResponseDto updateTask(UUID id, TaskDto taskDTO) throws Exception {
-        var entity = taskRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não foi encontrado uma task com o ID informado!"));
+        var user = securityContextService.getCurrentLoggedUser();
+
+
+        var entity = taskRepository.findByUserAndId(user, id);
+
+        if(entity == null) {
+            throw new ResourceNotFoundException("Não foi encontrado uma task com o ID informado!");
+        }
 
         entity.setTask(taskDTO.getTask());
         entity.setConcluded(taskDTO.getConcluded());
@@ -120,14 +121,24 @@ public class TaskServiceImpl implements TaskService {
 
     @Transactional
     public void deleteTask(UUID id) {
-        var entity = taskRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não é possível deletar essa task pois ela não existe!"));
+        var user = securityContextService.getCurrentLoggedUser();
+        var task = taskRepository.findByUserAndId(user, id);
+
+        if(task == null) {
+            throw new ResourceNotFoundException("Não é possível deletar essa task pois ela não existe!");
+        }
+
         taskRepository.deleteById(id);
     }
 
     @Transactional
     public TaskPatchDto updateTaskSituation(UUID id, TaskPatchDto taskPatchDTO) throws Exception {
+        var user = securityContextService.getCurrentLoggedUser();
+        var entity = taskRepository.findByUserAndId(user, id);
 
-        var entity = taskRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Não é possível deletar essa task pois ela não existe!"));
+        if(entity == null) {
+            throw new ResourceNotFoundException("Não é possível deletar essa task pois ela não existe!");
+        }
 
         if (entity.getDeadline().isBefore(LocalDateTime.now(ZoneId.of("UTC")))) {
             throw new BadRequestException("Não é possível atualizar a situaçao da tarefa porque seu prazo já está expirado!");
@@ -141,5 +152,16 @@ public class TaskServiceImpl implements TaskService {
         dto.add(linkTo(methodOn(TaskController.class).listTaskById(dto.getKey())).withSelfRel());
 
         return dto;
+    }
+
+    private TasksResponseDtoPaginated buildTaskResponseDtoPaginated(List<TaskResponseDto> tasksDtoHateoas, Page<TaskModel> tasksPage) {
+        TasksResponseDtoPaginated taskResponseDto = new TasksResponseDtoPaginated();
+        taskResponseDto.setContent(tasksDtoHateoas);
+        taskResponseDto.setPageNo(tasksPage.getNumber());
+        taskResponseDto.setPageSize(tasksPage.getSize());
+        taskResponseDto.setTotalElements(tasksPage.getTotalElements());
+        taskResponseDto.setTotalPages(tasksPage.getTotalPages());
+        taskResponseDto.setLast(tasksPage.isLast());
+        return taskResponseDto;
     }
 }
