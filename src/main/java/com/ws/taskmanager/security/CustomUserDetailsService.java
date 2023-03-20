@@ -1,6 +1,7 @@
 package com.ws.taskmanager.security;
 
 import com.ws.taskmanager.exceptions.ResourceNotFoundException;
+import com.ws.taskmanager.models.UserModel;
 import com.ws.taskmanager.repositories.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -38,6 +39,6 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .map(role -> new SimpleGrantedAuthority(role.getName()))
                 .collect(Collectors.toSet());
 
-        return new User(user.getEmail(), user.getPassword(), authorities);
+        return user;
     }
 }
