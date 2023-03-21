@@ -1,10 +1,7 @@
 package com.ws.taskmanager.controller;
 
 
-import com.ws.taskmanager.data.DTO.TaskCreateDto;
-import com.ws.taskmanager.data.DTO.TaskDto;
-import com.ws.taskmanager.data.DTO.TaskPatchDto;
-import com.ws.taskmanager.data.DTO.TaskResponseDto;
+import com.ws.taskmanager.data.DTO.*;
 import com.ws.taskmanager.services.TaskService;
 import com.ws.taskmanager.services.impl.TaskServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,7 +10,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -71,15 +67,15 @@ public class TaskController {
                     @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
             }
     )
-    public ResponseEntity<Page<TaskResponseDto>> listAllTasks(@RequestParam(value = "page", defaultValue = "0") Integer page,
-                                                              @RequestParam(value = "size", defaultValue = "10") Integer size,
-                                                              @RequestParam(value = "direction", defaultValue = "asc") String direction) {
+    public ResponseEntity<TasksResponseDtoPaginated> listAllTasks(@RequestParam(value = "page", defaultValue = "0") Integer page,
+                                                                  @RequestParam(value = "size", defaultValue = "10") Integer size,
+                                                                  @RequestParam(value = "direction", defaultValue = "asc") String direction) {
 
         var sortDirection = "desc".equalsIgnoreCase(direction) ? Sort.Direction.DESC : Sort.Direction.ASC;
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, "createdAt"));
 
-        return ResponseEntity.status(HttpStatus.OK).body(taskService.listAllTasks(pageable));
+        return ResponseEntity.status(HttpStatus.OK).body(taskService.findByUserWithPagination(pageable));
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

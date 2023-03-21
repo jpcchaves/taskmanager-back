@@ -1,10 +1,6 @@
 package com.ws.taskmanager.services;
 
-import com.ws.taskmanager.data.DTO.TaskCreateDto;
-import com.ws.taskmanager.data.DTO.TaskDto;
-import com.ws.taskmanager.data.DTO.TaskPatchDto;
-import com.ws.taskmanager.data.DTO.TaskResponseDto;
-import org.springframework.data.domain.Page;
+import com.ws.taskmanager.data.DTO.*;
 import org.springframework.data.domain.Pageable;
 
 import java.util.UUID;
@@ -12,7 +8,7 @@ import java.util.UUID;
 public interface TaskService {
     TaskResponseDto createTask(TaskCreateDto taskDTO) throws Exception;
 
-    Page<TaskResponseDto> listAllTasks(Pageable pageable);
+    TasksResponseDtoPaginated findByUserWithPagination(Pageable pageable);
 
     TaskResponseDto listTaskById(UUID id) throws Exception;
 
