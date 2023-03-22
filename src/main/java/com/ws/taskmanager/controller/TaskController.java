@@ -151,5 +151,11 @@ public class TaskController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/status")
+    public ResponseEntity<Integer> countByUserAndConluded(@RequestParam Boolean concluded) {
+        var count = taskService.countByUserAndConcluded(concluded);
+        return ResponseEntity.ok(count);
+    }
+
 
 }

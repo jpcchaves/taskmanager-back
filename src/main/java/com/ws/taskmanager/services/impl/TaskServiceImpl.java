@@ -7,21 +7,15 @@ import com.ws.taskmanager.exceptions.BadRequestException;
 import com.ws.taskmanager.exceptions.ResourceNotFoundException;
 import com.ws.taskmanager.mapper.DozerMapper;
 import com.ws.taskmanager.models.TaskModel;
-import com.ws.taskmanager.models.UserModel;
 import com.ws.taskmanager.repositories.TaskRepository;
-import com.ws.taskmanager.repositories.UserRepository;
 import com.ws.taskmanager.services.SecurityContextService;
 import com.ws.taskmanager.services.TaskService;
 import jakarta.transaction.Transactional;
-import org.apache.catalina.User;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -104,7 +98,7 @@ public class TaskServiceImpl implements TaskService {
 
         var entity = taskRepository.findByUserAndId(user, id);
 
-        if(entity == null) {
+        if (entity == null) {
             throw new ResourceNotFoundException("Não foi encontrado uma task com o ID informado!");
         }
 
@@ -123,7 +117,7 @@ public class TaskServiceImpl implements TaskService {
         var user = securityContextService.getCurrentLoggedUser();
         var task = taskRepository.findByUserAndId(user, id);
 
-        if(task == null) {
+        if (task == null) {
             throw new ResourceNotFoundException("Não é possível deletar essa task pois ela não existe!");
         }
 
@@ -135,7 +129,7 @@ public class TaskServiceImpl implements TaskService {
         var user = securityContextService.getCurrentLoggedUser();
         var entity = taskRepository.findByUserAndId(user, id);
 
-        if(entity == null) {
+        if (entity == null) {
             throw new ResourceNotFoundException("Não é possível deletar essa task pois ela não existe!");
         }
 
@@ -153,5 +147,10 @@ public class TaskServiceImpl implements TaskService {
         return dto;
     }
 
+    @Override
+    public Integer countByUserAndConcluded(Boolean concluded) {
+        var user = securityContextService.getCurrentLoggedUser();
 
+        return taskRepository.countByUserAndConcluded(user, concluded);
+    }
 }

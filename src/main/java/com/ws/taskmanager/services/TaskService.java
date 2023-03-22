@@ -17,4 +17,6 @@ public interface TaskService {
     void deleteTask(UUID id);
 
     TaskPatchDto updateTaskSituation(UUID id, TaskPatchDto taskPatchDTO) throws Exception;
+
+    Integer countByUserAndConcluded(Boolean concluded);
 }
