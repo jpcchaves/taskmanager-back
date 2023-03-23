@@ -1,6 +1,8 @@
 package com.ws.taskmanager.common;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -9,7 +11,7 @@ import java.util.List;
 @Component
 public class MapperUtils {
 
-    private ModelMapper mapper;
+    private final ModelMapper mapper;
 
     public MapperUtils(ModelMapper mapper) {
         this.mapper = mapper;
