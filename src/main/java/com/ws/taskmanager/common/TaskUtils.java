@@ -10,9 +10,9 @@ import java.util.List;
 
 public class TaskUtils {
 
-    public static TasksResponseDtoPaginated buildTaskResponseDtoPaginated(List<TaskResponseDto> tasksDtoHateoas, Page<TaskModel> tasksPage) {
+    public static TasksResponseDtoPaginated buildTaskResponseDtoPaginated(List<TaskResponseDto> taskResponseDtoList, Page<TaskModel> tasksPage) {
         TasksResponseDtoPaginated taskResponseDto = new TasksResponseDtoPaginated();
-        taskResponseDto.setContent(tasksDtoHateoas);
+        taskResponseDto.setContent(taskResponseDtoList);
         taskResponseDto.setPageNo(tasksPage.getNumber());
         taskResponseDto.setPageSize(tasksPage.getSize());
         taskResponseDto.setTotalElements(tasksPage.getTotalElements());
