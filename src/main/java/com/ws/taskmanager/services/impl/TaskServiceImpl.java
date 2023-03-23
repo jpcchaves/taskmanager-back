@@ -6,7 +6,6 @@ import com.ws.taskmanager.controller.TaskController;
 import com.ws.taskmanager.data.DTO.*;
 import com.ws.taskmanager.exceptions.BadRequestException;
 import com.ws.taskmanager.exceptions.ResourceNotFoundException;
-import com.ws.taskmanager.mapper.DozerMapper;
 import com.ws.taskmanager.models.TaskModel;
 import com.ws.taskmanager.repositories.TaskRepository;
 import com.ws.taskmanager.services.SecurityContextService;
@@ -18,10 +17,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.UUID;
-import java.util.stream.Collectors;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Service
 public class TaskServiceImpl implements TaskService {
@@ -41,16 +36,13 @@ public class TaskServiceImpl implements TaskService {
     @Transactional
     public TaskResponseDto createTask(TaskCreateDto taskDTO) throws Exception {
 
-        var task = DozerMapper.parseObject(taskDTO, TaskModel.class);
+        var task = mapperUtils.parseObject(taskDTO, TaskModel.class);
         task.setCreatedAt(LocalDateTime.now(ZoneId.of("UTC")));
         task.setConcluded(false);
 
         var user = securityContextService.getCurrentLoggedUser();
 
         task.setUserModel(user);
-
-        //        var dto = DozerMapper.parseObject(taskRepository.save(task), TaskResponseDto.class);
-//        dto.add(linkTo(methodOn(TaskController.class).listTaskById(dto.getKey())).withSelfRel());
 
         return mapperUtils
                 .parseObject(taskRepository.save(task), TaskResponseDto.class);
