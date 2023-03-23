@@ -8,21 +8,27 @@ import org.springframework.hateoas.RepresentationModel;
 import java.io.Serializable;
 import java.util.UUID;
 
-public class TaskPatchDto extends RepresentationModel<TaskResponseDto> implements Serializable {
+public class TaskPatchDto implements Serializable {
 
-    @JsonIgnore()
-    @Mapping("id")
-    private UUID key;
+    private UUID id;
 
     @NotNull(message = "A situação da task é obrigatória!")
     private Boolean concluded;
 
-    public UUID getKey() {
-        return key;
+    public TaskPatchDto() {
     }
 
-    public void setKey(UUID key) {
-        this.key = key;
+    public TaskPatchDto(UUID id, Boolean concluded) {
+        this.id = id;
+        this.concluded = concluded;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public Boolean getConcluded() {
@@ -31,33 +37,5 @@ public class TaskPatchDto extends RepresentationModel<TaskResponseDto> implement
 
     public void setConcluded(Boolean concluded) {
         this.concluded = concluded;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        if (!super.equals(o)) {
-            return false;
-        }
-
-        TaskPatchDto that = (TaskPatchDto) o;
-
-        if (!getKey().equals(that.getKey())) {
-            return false;
-        }
-        return getConcluded().equals(that.getConcluded());
-    }
-
-    @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + getKey().hashCode();
-        result = 31 * result + getConcluded().hashCode();
-        return result;
     }
 }

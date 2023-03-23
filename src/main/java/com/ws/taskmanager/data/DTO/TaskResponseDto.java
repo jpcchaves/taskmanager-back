@@ -13,11 +13,9 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @JsonPropertyOrder({"id", "task", "concluded", "deadline", "createdAt"})
-public class TaskResponseDto extends RepresentationModel<TaskResponseDto> implements Serializable {
+public class TaskResponseDto implements Serializable {
 
-    @JsonProperty("id")
-    @Mapping("id")
-    private UUID key;
+    private UUID id;
 
     @NotBlank(message = "A task é obrigatória!")
     private String task;
@@ -30,12 +28,23 @@ public class TaskResponseDto extends RepresentationModel<TaskResponseDto> implem
 
     private LocalDateTime createdAt;
 
-    public UUID getKey() {
-        return key;
+    public TaskResponseDto() {
     }
 
-    public void setKey(UUID key) {
-        this.key = key;
+    public TaskResponseDto(UUID id, String task, LocalDateTime deadline, Boolean concluded, LocalDateTime createdAt) {
+        this.id = id;
+        this.task = task;
+        this.deadline = deadline;
+        this.concluded = concluded;
+        this.createdAt = createdAt;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public String getTask() {
@@ -68,45 +77,5 @@ public class TaskResponseDto extends RepresentationModel<TaskResponseDto> implem
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        if (!super.equals(o)) {
-            return false;
-        }
-
-        TaskResponseDto that = (TaskResponseDto) o;
-
-        if (!getKey().equals(that.getKey())) {
-            return false;
-        }
-        if (!getTask().equals(that.getTask())) {
-            return false;
-        }
-        if (!getDeadline().equals(that.getDeadline())) {
-            return false;
-        }
-        if (!getConcluded().equals(that.getConcluded())) {
-            return false;
-        }
-        return getCreatedAt().equals(that.getCreatedAt());
-    }
-
-    @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + getKey().hashCode();
-        result = 31 * result + getTask().hashCode();
-        result = 31 * result + getDeadline().hashCode();
-        result = 31 * result + getConcluded().hashCode();
-        result = 31 * result + getCreatedAt().hashCode();
-        return result;
     }
 }
