@@ -1,9 +1,9 @@
 package com.ws.taskmanager.services.impl;
 
+import com.ws.taskmanager.common.MapperUtils;
 import com.ws.taskmanager.data.DTO.*;
 import com.ws.taskmanager.exceptions.BadRequestException;
 import com.ws.taskmanager.exceptions.ResourceNotFoundException;
-import com.ws.taskmanager.mapper.DozerMapper;
 import com.ws.taskmanager.models.RoleModel;
 import com.ws.taskmanager.models.UserModel;
 import com.ws.taskmanager.repositories.RoleRepository;
@@ -28,6 +28,7 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
+    private final MapperUtils mapperUtils;
 
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -35,12 +36,14 @@ public class AuthServiceImpl implements AuthService {
                            UserRepository userRepository,
                            RoleRepository roleRepository,
                            PasswordEncoder passwordEncoder,
-                           JwtTokenProvider jwtTokenProvider) {
+                           JwtTokenProvider jwtTokenProvider,
+                           MapperUtils mapperUtils) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtTokenProvider = jwtTokenProvider;
+        this.mapperUtils = mapperUtils;
     }
 
     @Override
@@ -90,7 +93,7 @@ public class AuthServiceImpl implements AuthService {
 
         var newUser = userRepository.save(user);
 
-        return DozerMapper.parseObject(newUser, RegisterResponseDto.class);
+        return mapperUtils.parseObject(newUser, RegisterResponseDto.class);
     }
 
     @Override
@@ -106,7 +109,7 @@ public class AuthServiceImpl implements AuthService {
             user.setName(updateUserDto.getName());
             user.setPassword(passwordEncoder.encode(updateUserDto.getPassword()));
 
-            var response = DozerMapper.parseObject(userRepository.save(user), UpdateUserResponseDto.class);
+            var response = mapperUtils.parseObject(userRepository.save(user), UpdateUserResponseDto.class);
 
             response.setMessage("Usuário atualizado com sucesso!");
 

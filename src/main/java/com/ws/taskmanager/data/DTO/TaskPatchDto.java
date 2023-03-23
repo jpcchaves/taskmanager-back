@@ -1,9 +1,6 @@
 package com.ws.taskmanager.data.DTO;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.github.dozermapper.core.Mapping;
 import jakarta.validation.constraints.NotNull;
-import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serializable;
 import java.util.UUID;
@@ -11,6 +8,7 @@ import java.util.UUID;
 public class TaskPatchDto implements Serializable {
 
     private UUID id;
+
 
     @NotNull(message = "A situação da task é obrigatória!")
     private Boolean concluded;
