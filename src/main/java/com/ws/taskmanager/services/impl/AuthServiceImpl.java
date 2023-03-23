@@ -2,6 +2,7 @@ package com.ws.taskmanager.services.impl;
 
 import com.ws.taskmanager.data.DTO.*;
 import com.ws.taskmanager.exceptions.BadRequestException;
+import com.ws.taskmanager.exceptions.ResourceNotFoundException;
 import com.ws.taskmanager.mapper.DozerMapper;
 import com.ws.taskmanager.models.RoleModel;
 import com.ws.taskmanager.models.UserModel;
@@ -77,7 +78,6 @@ public class AuthServiceImpl implements AuthService {
             throw new BadRequestException("Já existe um usuário cadastrado com o email informado");
         }
 
-
         Set<RoleModel> roles = new HashSet<>();
         Optional<RoleModel> userRole = roleRepository.findByName("ROLE_USER");
 
@@ -91,6 +91,29 @@ public class AuthServiceImpl implements AuthService {
         var newUser = userRepository.save(user);
 
         return DozerMapper.parseObject(newUser, RegisterResponseDto.class);
+    }
+
+    @Override
+    public UpdateUserResponseDto update(UpdateUserRequestDto updateUserDto, Long id) {
+        var user = userRepository
+                .findById(id)
+                .orElseThrow(
+                        () -> new ResourceNotFoundException("Usuário não encontrado com o id: " + id)
+                );
+
+        if (passwordsMatches(updateUserDto.getCurrentPassword(), user.getPassword())) {
+
+            user.setName(updateUserDto.getName());
+            user.setPassword(passwordEncoder.encode(updateUserDto.getPassword()));
+
+            var response = DozerMapper.parseObject(userRepository.save(user), UpdateUserResponseDto.class);
+
+            response.setMessage("Usuário atualizado com sucesso!");
+
+            return response;
+        } else {
+            throw new BadRequestException("A senha atual não condiz com a senha cadastrada anteriormente.");
+        }
     }
 
     private UserDto copyPropertiesFromUserToUserDto(UserModel user) {
@@ -109,5 +132,9 @@ public class AuthServiceImpl implements AuthService {
         user.setUsername(registerDto.getUsername());
         user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
         return user;
+    }
+
+    private Boolean passwordsMatches(String currentPassword, String password) {
+        return passwordEncoder.matches(currentPassword, password);
     }
 }
