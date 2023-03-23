@@ -1,5 +1,6 @@
 package com.ws.taskmanager.services.impl;
 
+import com.ws.taskmanager.common.MapperUtils;
 import com.ws.taskmanager.common.TaskUtils;
 import com.ws.taskmanager.controller.TaskController;
 import com.ws.taskmanager.data.DTO.*;
@@ -27,11 +28,14 @@ public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
     private final SecurityContextService securityContextService;
+    private final MapperUtils mapperUtils;
 
     public TaskServiceImpl(TaskRepository taskRepository,
-                           SecurityContextService securityContextService) {
+                           SecurityContextService securityContextService,
+                            MapperUtils mapperUtils) {
         this.taskRepository = taskRepository;
         this.securityContextService = securityContextService;
+        this.mapperUtils = mapperUtils;
     }
 
     @Transactional
@@ -45,32 +49,23 @@ public class TaskServiceImpl implements TaskService {
 
         task.setUserModel(user);
 
-        var dto = DozerMapper.parseObject(taskRepository.save(task), TaskResponseDto.class);
-        dto.add(linkTo(methodOn(TaskController.class).listTaskById(dto.getKey())).withSelfRel());
+        //        var dto = DozerMapper.parseObject(taskRepository.save(task), TaskResponseDto.class);
+//        dto.add(linkTo(methodOn(TaskController.class).listTaskById(dto.getKey())).withSelfRel());
 
-        return dto;
+        return mapperUtils
+                .parseObject(taskRepository.save(task), TaskResponseDto.class);
     }
 
     @Override
     public TasksResponseDtoPaginated findByUserWithPagination(Pageable pageable) {
 
         var user = securityContextService.getCurrentLoggedUser();
+        taskRepository.findByUser(user, pageable);
 
-        var tasksPage = taskRepository.findByUser(user, pageable);
+        var taskPage = taskRepository.findByUser(user, pageable);
+        var tasksDto = mapperUtils.parseListObjects(taskPage.getContent(), TaskResponseDto.class);
 
-        var tasksDto = tasksPage.getContent().stream().map(task ->
-                DozerMapper.parseObject(task, TaskResponseDto.class)
-        ).toList();
-
-        var tasksDtoHateoas = tasksDto.stream().map(task -> {
-            try {
-                return task.add(linkTo(methodOn(TaskController.class).listTaskById(task.getKey())).withSelfRel());
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }).collect(Collectors.toList());
-
-        return TaskUtils.buildTaskResponseDtoPaginated(tasksDtoHateoas, tasksPage);
+        return TaskUtils.buildTaskResponseDtoPaginated(tasksDto, taskPage);
     }
 
     public TaskResponseDto listTaskById(UUID id) throws Exception {
@@ -82,13 +77,9 @@ public class TaskServiceImpl implements TaskService {
             throw new ResourceNotFoundException("Não foi encontrado uma task com o ID informado!");
         }
 
-        var task = DozerMapper.parseObject(entity, TaskModel.class);
+        var task = mapperUtils.parseObject(entity, TaskModel.class);
 
-        var dto = DozerMapper.parseObject(task, TaskResponseDto.class);
-
-        dto.add(linkTo(methodOn(TaskController.class).listTaskById(id)).withSelfRel());
-
-        return dto;
+        return mapperUtils.parseObject(task, TaskResponseDto.class);
     }
 
     @Transactional
@@ -104,12 +95,9 @@ public class TaskServiceImpl implements TaskService {
 
         var updatedTask = TaskUtils.copyPropertiesFromTaskModelToTaskDto(entity, taskDTO);
 
-        var task = DozerMapper.parseObject(taskRepository.save(updatedTask), TaskModel.class);
+        var task = mapperUtils.parseObject(taskRepository.save(updatedTask), TaskModel.class);
 
-        var dto = DozerMapper.parseObject(task, TaskResponseDto.class);
-        dto.add(linkTo(methodOn(TaskController.class).listTaskById(dto.getKey())).withSelfRel());
-
-        return dto;
+        return mapperUtils.parseObject(task, TaskResponseDto.class);
     }
 
     @Transactional
@@ -139,12 +127,9 @@ public class TaskServiceImpl implements TaskService {
 
         entity.setConcluded(taskPatchDTO.getConcluded());
 
-        var task = DozerMapper.parseObject(taskRepository.save(entity), TaskModel.class);
+        var task = mapperUtils.parseObject(taskRepository.save(entity), TaskModel.class);
 
-        var dto = DozerMapper.parseObject(task, TaskPatchDto.class);
-        dto.add(linkTo(methodOn(TaskController.class).listTaskById(dto.getKey())).withSelfRel());
-
-        return dto;
+        return mapperUtils.parseObject(task, TaskPatchDto.class);
     }
 
     @Override
