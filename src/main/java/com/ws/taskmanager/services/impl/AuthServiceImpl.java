@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -79,6 +80,10 @@ public class AuthServiceImpl implements AuthService {
         // check if email already registered
         if (userRepository.existsByEmail(registerDto.getEmail())) {
             throw new BadRequestException("Já existe um usuário cadastrado com o email informado");
+        }
+
+        if (!Objects.equals(registerDto.getPassword(), registerDto.getConfirmPassword())) {
+            throw new BadRequestException("As senhas não são iguais!");
         }
 
         Set<RoleModel> roles = new HashSet<>();
