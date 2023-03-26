@@ -1,8 +1,18 @@
 package com.ws.taskmanager.data.DTO;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import org.hibernate.validator.constraints.Length;
+
 public class UpdateUserRequestDto {
     private String name;
+
+    @NotBlank(message = "A senha atual é obrigatória!")
+    @Size(min = 6, message = "A senha deve conter pelo menos 6 caracteres!")
     private String currentPassword;
+
+    @NotBlank(message = "A senha atual é obrigatória!")
+    @Length(min = 6, message = "Senha deve conter pelo menos 6 caracteres!")
     private String password;
 
     public UpdateUserRequestDto() {

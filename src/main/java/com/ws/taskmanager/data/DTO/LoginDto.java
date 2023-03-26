@@ -1,7 +1,14 @@
 package com.ws.taskmanager.data.DTO;
 
+import jakarta.validation.constraints.NotBlank;
+import org.hibernate.validator.constraints.Length;
+
 public class LoginDto {
+    @NotBlank(message = "O usuário ou email são obrigatórios para rezalizar o login!")
     private String usernameOrEmail;
+    
+    @NotBlank(message = "A senha é obrigatória para realizar o login!")
+    @Length(min = 6, message = "Senha deve conter pelo menos 6 caracteres!")
     private String password;
 
     public LoginDto() {

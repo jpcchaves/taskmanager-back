@@ -1,10 +1,27 @@
 package com.ws.taskmanager.data.DTO;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import org.hibernate.validator.constraints.Length;
+
 public class RegisterDto {
+
     private String name;
+
+    @NotBlank(message = "O nome de usuário é obrigatório!")
     private String username;
+
+    @NotBlank(message = "O email é obrigatório!")
+    @Email(message = "Insira um email válido!")
     private String email;
+
+    @NotBlank(message = "A senha é obrigatória!")
+    @NotBlank(message = "A senha atual é obrigatória!")
+    @Length(min = 6, message = "Senha deve conter pelo menos 6 caracteres!")
     private String password;
+
+    @NotBlank(message = "A confirmação de senha é obrigatória!")
+    @Length(min = 6, message = "Senha deve conter pelo menos 6 caracteres!")
     private String confirmPassword;
 
     public RegisterDto() {
