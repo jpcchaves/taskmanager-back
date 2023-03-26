@@ -2,6 +2,7 @@ package com.ws.taskmanager.services.impl;
 
 import com.ws.taskmanager.common.MapperUtils;
 import com.ws.taskmanager.data.DTO.*;
+import com.ws.taskmanager.exceptions.BadCredentialsException;
 import com.ws.taskmanager.exceptions.BadRequestException;
 import com.ws.taskmanager.exceptions.ResourceNotFoundException;
 import com.ws.taskmanager.models.RoleModel;
@@ -13,6 +14,7 @@ import com.ws.taskmanager.services.AuthService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -49,25 +51,31 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public JWTAuthResponseDto login(LoginDto loginDto) {
-        Authentication authentication = authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(
-                        loginDto.getUsernameOrEmail(), loginDto.getPassword()
-                ));
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        try {
+            Authentication authentication = authenticationManager
+                    .authenticate(new UsernamePasswordAuthenticationToken(
+                            loginDto.getUsernameOrEmail(), loginDto.getPassword()
+                    ));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        String token = jwtTokenProvider.generateToken(authentication);
+            String token = jwtTokenProvider.generateToken(authentication);
 
-        var user = userRepository.findByUsernameOrEmail(loginDto.getUsernameOrEmail(), loginDto.getUsernameOrEmail()).get();
+            var user = userRepository.findByUsernameOrEmail(loginDto.getUsernameOrEmail(), loginDto.getUsernameOrEmail()).orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado com os dados informados: " + loginDto.getUsernameOrEmail()));
 
-        var userDto = copyPropertiesFromUserToUserDto(user);
+            var userDto = copyPropertiesFromUserToUserDto(user);
 
-        JWTAuthResponseDto jwtAuthResponseDto = new JWTAuthResponseDto();
+            JWTAuthResponseDto jwtAuthResponseDto = new JWTAuthResponseDto();
 
-        jwtAuthResponseDto.setAccessToken(token);
-        jwtAuthResponseDto.setUser(userDto);
+            jwtAuthResponseDto.setAccessToken(token);
+            jwtAuthResponseDto.setUser(userDto);
 
-        return jwtAuthResponseDto;
+            return jwtAuthResponseDto;
+
+        } catch (AuthenticationException ex) {
+            throw new BadCredentialsException("Usuário inexistente ou senha inválida");
+        }
+
     }
 
     @Override

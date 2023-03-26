@@ -1,5 +1,6 @@
 package com.ws.taskmanager.exceptions.handler;
 
+import com.ws.taskmanager.exceptions.BadCredentialsException;
 import com.ws.taskmanager.exceptions.BadRequestException;
 import com.ws.taskmanager.exceptions.ResourceNotFoundException;
 import com.ws.taskmanager.exceptions.model.ExceptionResponse;
@@ -44,6 +45,13 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false));
 
         return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public final ResponseEntity<ExceptionResponse> handleBadCredentialsException(BadCredentialsException ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false));
+
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 
     @Override
