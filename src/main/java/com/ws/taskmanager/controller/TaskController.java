@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
-@RestController
 @CrossOrigin(origins = "*")
+@RestController
 @RequestMapping("api/v1/tasks")
 public class TaskController {
 
