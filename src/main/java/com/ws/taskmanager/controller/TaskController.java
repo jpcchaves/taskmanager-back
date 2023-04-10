@@ -18,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @CrossOrigin(origins = "*")
@@ -155,6 +156,12 @@ public class TaskController {
     public ResponseEntity<Integer> countByUserAndConluded(@RequestParam Boolean concluded) {
         var count = taskService.countByUserAndConcluded(concluded);
         return ResponseEntity.ok(count);
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<List<TaskResponseDto>> findAllByUserAndConcluded(@RequestParam Boolean concluded) {
+        var tasksListByConcluded = taskService.findAllByUserAndConcluded(concluded);
+        return ResponseEntity.ok(tasksListByConcluded);
     }
 
 

@@ -2,7 +2,6 @@ package com.ws.taskmanager.services.impl;
 
 import com.ws.taskmanager.common.MapperUtils;
 import com.ws.taskmanager.common.TaskUtils;
-import com.ws.taskmanager.controller.TaskController;
 import com.ws.taskmanager.data.DTO.*;
 import com.ws.taskmanager.exceptions.BadRequestException;
 import com.ws.taskmanager.exceptions.ResourceNotFoundException;
@@ -16,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -27,7 +27,7 @@ public class TaskServiceImpl implements TaskService {
 
     public TaskServiceImpl(TaskRepository taskRepository,
                            SecurityContextService securityContextService,
-                            MapperUtils mapperUtils) {
+                           MapperUtils mapperUtils) {
         this.taskRepository = taskRepository;
         this.securityContextService = securityContextService;
         this.mapperUtils = mapperUtils;
@@ -90,6 +90,14 @@ public class TaskServiceImpl implements TaskService {
         var task = mapperUtils.parseObject(taskRepository.save(updatedTask), TaskModel.class);
 
         return mapperUtils.parseObject(task, TaskResponseDto.class);
+    }
+
+    @Override
+    public List<TaskResponseDto> findAllByUserAndConcluded(Boolean concluded) {
+        var user = securityContextService.getCurrentLoggedUser();
+        List<TaskModel> tasksByConcluded = taskRepository.findAllByUserAndConcluded(user, concluded);
+
+        return mapperUtils.parseListObjects(tasksByConcluded, TaskResponseDto.class);
     }
 
     @Transactional

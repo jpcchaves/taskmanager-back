@@ -3,6 +3,7 @@ package com.ws.taskmanager.services;
 import com.ws.taskmanager.data.DTO.*;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface TaskService {
@@ -13,6 +14,8 @@ public interface TaskService {
     TaskResponseDto listTaskById(UUID id) throws Exception;
 
     TaskResponseDto updateTask(UUID id, TaskDto taskDTO) throws Exception;
+
+    List<TaskResponseDto> findAllByUserAndConcluded(Boolean concluded);
 
     void deleteTask(UUID id);
 
