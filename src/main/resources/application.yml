@@ -1,4 +1,6 @@
 spring:
+  main:
+    allow-bean-definition-overriding: true
   datasource:
     url: jdbc:mysql://localhost:3306/taskmanager
     #    url: jdbc:mysql://root:o2PThfSoQgYMvBTDAjYM@containers-us-west-194.railway.app:6058/railway?useTimezone=true&serverTimezone=UTC
@@ -16,6 +18,11 @@ spring:
         time_zone: UTC
     database: MYSQL
     database-platform: org.hibernate.dialect.MySQLDialect
+  cache:
+    type: jcache
+    jcache:
+      provider: com.hazelcast.cache.impl.HazelcastServerCachingProvider
+      config: classpath:hazelcast.xml
 spring-doc:
   swagger-ui:
     operations-sorter: alpha
@@ -23,3 +30,13 @@ spring-doc:
 app:
   jwt-secret: 781dcdf14b25e5191fe614744275d51b861c39d40cf8fcb4a6bebc310ca2a6f5
   jwt-expiration-milliseconds: 604800000
+bucket4j:
+  enabled: true
+  filters:
+    - cache-name: tasksRateLimiter
+      url: .*
+      rate-limits:
+        - bandwidths:
+            - capacity: 200
+              time: 30
+              unit: minutes
