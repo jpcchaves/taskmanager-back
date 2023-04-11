@@ -13,6 +13,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
@@ -142,6 +143,7 @@ public class TaskServiceImpl implements TaskService {
         Integer totalTasksConcluded = 0;
         Integer totalTasksNotConcluded = 0;
 
+
         for (TaskModel task : tasks) {
             if (task.getConcluded()) {
                 totalTasksConcluded++;
@@ -150,14 +152,26 @@ public class TaskServiceImpl implements TaskService {
             }
         }
 
+
+        var concludedPercentage = getPercentage(totalTasksConcluded, totalTasksAmount);
+        var notConcludedPercentage = getPercentage(totalTasksNotConcluded, totalTasksAmount);
+
         DashboardDto dashboardData = new DashboardDto(
                 totalTasksAmount,
                 totalTasksConcluded,
-                totalTasksNotConcluded
+                totalTasksNotConcluded,
+                concludedPercentage,
+                notConcludedPercentage
         );
-
         return new DashboardResponseDto(dashboardData);
     }
 
+    private String getPercentage(Integer tasks, Integer totalTasksAmount) {
+        return convertToPercentageFormat(tasks / (double) totalTasksAmount);
+    }
 
+    private String convertToPercentageFormat(double number) {
+        DecimalFormat df = new DecimalFormat("##.##%");
+        return df.format(number);
+    }
 }

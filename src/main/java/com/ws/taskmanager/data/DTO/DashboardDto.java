@@ -4,16 +4,22 @@ public class DashboardDto {
     private Integer totalTasksAmount;
     private Integer totalTasksConcluded;
     private Integer totalTasksNotConcluded;
+    private String concludedPercentage;
+    private String notConcludedPercentage;
 
     public DashboardDto() {
     }
 
     public DashboardDto(Integer totalTasksAmount,
                         Integer totalTasksConcluded,
-                        Integer totalTasksNotConcluded) {
+                        Integer totalTasksNotConcluded,
+                        String concludedPercentage,
+                        String notConcludedPercentage) {
         this.totalTasksAmount = totalTasksAmount;
         this.totalTasksConcluded = totalTasksConcluded;
         this.totalTasksNotConcluded = totalTasksNotConcluded;
+        this.concludedPercentage = concludedPercentage;
+        this.notConcludedPercentage = notConcludedPercentage;
     }
 
     public Integer getTotalTasksAmount() {
@@ -38,5 +44,21 @@ public class DashboardDto {
 
     public void setTotalTasksNotConcluded(Integer totalTasksNotConcluded) {
         this.totalTasksNotConcluded = totalTasksNotConcluded;
+    }
+
+    public String getConcludedPercentage() {
+        return concludedPercentage;
+    }
+
+    public void setConcludedPercentage(String concludedPercentage) {
+        this.concludedPercentage = concludedPercentage;
+    }
+
+    public String getNotConcludedPercentage() {
+        return notConcludedPercentage;
+    }
+
+    public void setNotConcludedPercentage(String notConcludedPercentage) {
+        this.notConcludedPercentage = notConcludedPercentage;
     }
 }
