@@ -1,0 +1,13 @@
+<hazelcast
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="" xmlns="http://www.hazelcast.com/schema/config">
+    <cache name="tasksRateLimiter">
+        <management-enabled>true</management-enabled>
+    </cache>
+    <map name="tasksRateLimiter">
+        <time-to-live-seconds>120</time-to-live-seconds>
+        <in-memory-format>BINARY</in-memory-format>
+        <metadata-policy>CREATE_ON_UPDATE</metadata-policy>
+        <statistics-enabled>true</statistics-enabled>
+    </map>
+</hazelcast>
