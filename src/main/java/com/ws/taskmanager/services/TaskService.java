@@ -21,5 +21,5 @@ public interface TaskService {
 
     TaskPatchDto updateTaskSituation(UUID id, TaskPatchDto taskPatchDTO) throws Exception;
 
-    Integer countByUserAndConcluded(Boolean concluded);
+    DashboardResponseDto dashboard();
 }

@@ -133,9 +133,31 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Integer countByUserAndConcluded(Boolean concluded) {
+    public DashboardResponseDto dashboard() {
         var user = securityContextService.getCurrentLoggedUser();
+        var tasks = taskRepository.findAllByUser(user);
 
-        return taskRepository.countByUserAndConcluded(user, concluded);
+        Integer totalTasksAmount = tasks.size();
+
+        Integer totalTasksConcluded = 0;
+        Integer totalTasksNotConcluded = 0;
+
+        for (TaskModel task : tasks) {
+            if (task.getConcluded()) {
+                totalTasksConcluded++;
+            } else {
+                totalTasksNotConcluded++;
+            }
+        }
+
+        DashboardDto dashboardData = new DashboardDto(
+                totalTasksAmount,
+                totalTasksConcluded,
+                totalTasksNotConcluded
+        );
+
+        return new DashboardResponseDto(dashboardData);
     }
+
+
 }
