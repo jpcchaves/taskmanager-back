@@ -14,9 +14,9 @@ import java.util.UUID;
 public interface TaskRepository extends JpaRepository<TaskModel, UUID> {
     Page<TaskModel> findByUser(UserModel userModel, Pageable pageable);
 
+    List<TaskModel> findAllByUser(UserModel userModel);
+
     TaskModel findByUserAndId(UserModel user, UUID id);
 
     List<TaskModel> findAllByUserAndConcluded(UserModel user, Boolean concluded);
-
-    Integer countByUserAndConcluded(UserModel user, Boolean concluded);
 }
