@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Size;
 import org.hibernate.validator.constraints.Length;
 
 public class UpdateUserRequestDto {
+    @Size(max = 50, message = "O nome deve conter no máximo 50 caracteres!")
     private String name;
 
     @NotBlank(message = "A senha atual é obrigatória!")

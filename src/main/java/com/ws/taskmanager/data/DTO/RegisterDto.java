@@ -2,12 +2,15 @@ package com.ws.taskmanager.data.DTO;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import org.hibernate.validator.constraints.Length;
 
 public class RegisterDto {
 
+    @Size(max = 50, message = "O nome deve conter no máximo 50 caracteres!")
     private String name;
 
+    @Size(max = 50, message = "O nome deve conter no máximo 50 caracteres!")
     @NotBlank(message = "O nome de usuário é obrigatório!")
     private String username;
 
