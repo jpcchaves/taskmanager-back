@@ -100,7 +100,6 @@
             <artifactId>modelmapper</artifactId>
             <version>3.1.1</version>
         </dependency>
-
         <dependency>
             <groupId>com.giffing.bucket4j.spring.boot.starter</groupId>
             <artifactId>bucket4j-spring-boot-starter</artifactId>
@@ -116,7 +115,6 @@
             <artifactId>hazelcast</artifactId>
             <version>5.2.3</version>
         </dependency>
-
     </dependencies>
 
     <build>
