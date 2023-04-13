@@ -152,9 +152,16 @@ public class TaskController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/dashboard")
+    public ResponseEntity<DashboardResponseDto> countByUserAndConcluded() {
+        return ResponseEntity.ok(taskService.dashboard());
+    }
+
     @GetMapping("/filter")
     public ResponseEntity<List<TaskResponseDto>> findAllByUserAndConcluded(@RequestParam Boolean concluded) {
         var tasksListByConcluded = taskService.findAllByUserAndConcluded(concluded);
         return ResponseEntity.ok(tasksListByConcluded);
     }
+
+
 }
