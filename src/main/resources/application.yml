@@ -2,12 +2,12 @@ spring:
   main:
     allow-bean-definition-overriding: true
   datasource:
-    url: jdbc:mysql://localhost:3306/taskmanager
-    #    url: jdbc:mysql://root:o2PThfSoQgYMvBTDAjYM@containers-us-west-194.railway.app:6058/railway?useTimezone=true&serverTimezone=UTC
+    #    url: jdbc:mysql://localhost:3306/taskmanager
+    url: jdbc:mysql://root:uxRUGypI7loezJ0bMtEO@containers-us-west-105.railway.app:6890/railway?useTimezone=true&serverTimezone=UTC
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
-    password: admin
-  #    password: o2PThfSoQgYMvBTDAjYM
+    password: uxRUGypI7loezJ0bMtEO
+    #    password: admin
   jpa:
     hibernate:
       ddl-auto: update
