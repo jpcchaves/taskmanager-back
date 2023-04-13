@@ -1,1 +1,2 @@
-INSERT INTO `taskmanager`.`users_roles` (`user_id`, `role_id`) VALUES ('1', '1');
+INSERT INTO `railway`.`users_roles` (`user_id`, `role_id`)
+VALUES ('1', '1');

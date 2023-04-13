@@ -3,10 +3,10 @@ spring:
     allow-bean-definition-overriding: true
   datasource:
     #    url: jdbc:mysql://localhost:3306/taskmanager
-    url: jdbc:mysql://root:uxRUGypI7loezJ0bMtEO@containers-us-west-105.railway.app:6890/railway?useTimezone=true&serverTimezone=UTC
+    url: jdbc:mysql://root:JSur7lZs2Z6lrtevTuSX@containers-us-west-145.railway.app:7369/railway?useTimezone=true&serverTimezone=UTC
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
-    password: uxRUGypI7loezJ0bMtEO
+    password: JSur7lZs2Z6lrtevTuSX
     #    password: admin
   jpa:
     hibernate:
