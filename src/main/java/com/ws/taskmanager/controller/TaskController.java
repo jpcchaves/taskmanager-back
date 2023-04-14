@@ -152,12 +152,41 @@ public class TaskController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/dashboard")
+    @GetMapping(value = "/dashboard", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Finds a tasks", description = "Finds a tasks",
+            tags = {"Tasks"},
+            responses = {
+                    @ApiResponse(description = "Success", responseCode = "200",
+                            content = @Content(schema = @Schema(implementation = DashboardResponseDto.class))
+                    ),
+                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+                    @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
+            }
+    )
     public ResponseEntity<DashboardResponseDto> countByUserAndConcluded() {
         return ResponseEntity.ok(taskService.dashboard());
     }
 
     @GetMapping("/filter")
+    @Operation(summary = "Filter tasks by situation", description = "Filter tasks by situation (if it's concluded or not)",
+            tags = {"Tasks"},
+            responses = {
+                    @ApiResponse(description = "Success", responseCode = "200",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            array = @ArraySchema(schema = @Schema(implementation = TaskResponseDto.class))
+                                    )
+                            }),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+                    @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
+            }
+    )
     public ResponseEntity<List<TaskResponseDto>> findAllByUserAndConcluded(@RequestParam Boolean concluded) {
         var tasksListByConcluded = taskService.findAllByUserAndConcluded(concluded);
         return ResponseEntity.ok(tasksListByConcluded);
