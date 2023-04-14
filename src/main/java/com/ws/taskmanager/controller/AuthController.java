@@ -2,6 +2,10 @@ package com.ws.taskmanager.controller;
 
 import com.ws.taskmanager.data.DTO.*;
 import com.ws.taskmanager.services.AuthService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,16 +21,52 @@ public class AuthController {
         this.authService = authService;
     }
 
+    @Operation(summary = "Authenticates an user",
+            description = "Authenticate an user using the provided username/email and password",
+            tags = {"Auth"},
+            responses = {
+                    @ApiResponse(description = "Success", responseCode = "200",
+                            content = @Content(schema = @Schema(implementation = JWTAuthResponseDto.class))
+                    ),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
+            }
+    )
     @PostMapping(value = {"/login", "/signin"})
     public ResponseEntity<JWTAuthResponseDto> login(@Valid @RequestBody LoginDto loginDto) {
         return ResponseEntity.ok(authService.login(loginDto));
     }
 
+    @Operation(summary = "Register an user",
+            description = "Register an user using the JSON representation of the registration",
+            tags = {"Auth"},
+            responses = {
+                    @ApiResponse(description = "Success", responseCode = "200",
+                            content = @Content(schema = @Schema(implementation = RegisterResponseDto.class))
+                    ),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
+            }
+    )
     @PostMapping(value = {"/register", "/signup"})
     public ResponseEntity<RegisterResponseDto> register(@Valid @RequestBody RegisterDto registerDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(authService.register(registerDto));
     }
 
+    @Operation(summary = "Updates an user",
+            description = "Updates an user using the JSON representation of the updated user",
+            tags = {"Auth"},
+            responses = {
+                    @ApiResponse(description = "Success", responseCode = "200",
+                            content = @Content(schema = @Schema(implementation = UpdateUserRequestDto.class))
+                    ),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
+            }
+    )
     @PutMapping("/update/{id}")
     public ResponseEntity<UpdateUserResponseDto> update(@Valid @RequestBody UpdateUserRequestDto updateUserDto,
                                                         @PathVariable(name = "id") Long id) {
