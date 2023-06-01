@@ -40,3 +40,4 @@ bucket4j:
             - capacity: 200
               time: 30
               unit: minutes
+              refill-speed: greedy
