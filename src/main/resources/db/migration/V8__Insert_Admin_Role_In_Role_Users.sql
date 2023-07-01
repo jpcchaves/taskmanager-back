@@ -1,2 +1,2 @@
-INSERT INTO `taskmanager`.`users_roles` (`user_id`, `role_id`)
+INSERT INTO `task_manager`.`users_roles` (`user_id`, `role_id`)
 VALUES ('1', '1');
